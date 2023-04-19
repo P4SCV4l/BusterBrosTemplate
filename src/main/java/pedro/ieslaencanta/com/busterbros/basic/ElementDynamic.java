@@ -4,6 +4,7 @@
  */
 package pedro.ieslaencanta.com.busterbros.basic;
 
+import java.util.Optional;
 import javafx.geometry.Rectangle2D;
 import pedro.ieslaencanta.com.busterbros.basic.interfaces.ICollidable;
 import pedro.ieslaencanta.com.busterbros.basic.interfaces.IState;
@@ -19,14 +20,13 @@ public class ElementDynamic extends Element implements ICollidable, IState{
         super();
     }
 
-    public ElementDynamic(State state, double x, double y, double width, double height) {
+    public ElementDynamic(double x, double y, double width, double height) {
         super(x, y, width, height);
-        this.state = state;
     }
     
    
     @Override
-    public void collision(Element element) {
+    public Optional<Collision> collision(Element e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

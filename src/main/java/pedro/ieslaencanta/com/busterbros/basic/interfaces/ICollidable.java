@@ -4,6 +4,7 @@
  */
 package pedro.ieslaencanta.com.busterbros.basic.interfaces;
 
+import pedro.ieslaencanta.com.busterbros.basic.Collision;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
 
 /**
@@ -11,5 +12,5 @@ import pedro.ieslaencanta.com.busterbros.basic.Element;
  * @author PC
  */
 public interface ICollidable {
-    public void collision(Element element);
+    public Optional<Collision> collision(Element e);
 }

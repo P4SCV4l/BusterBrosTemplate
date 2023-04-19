@@ -13,7 +13,10 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import pedro.ieslaencanta.com.busterbros.basic.Brick;
+import pedro.ieslaencanta.com.busterbros.basic.BrickBreakable;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
+import pedro.ieslaencanta.com.busterbros.basic.Ladder;
 import pedro.ieslaencanta.com.busterbros.basic.Level;
 
 ;
@@ -85,27 +88,47 @@ public class Board implements IKeyListener {
     }
 
     private void createElementsLevel() {
-
+        Brick tempo;
+        BrickBreakable tempo2;
+        Ladder tempo3;
         Pair<Level.ElementType, Rectangle2D>[] fi = this.levels[this.actual_level].getFigures();
         this.elements = new Element[fi.length];
         for (int i = 0; i < fi.length; i++) {
 
-            this.elements[i] = new Element((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
-                    (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
-                    fi[i].getValue().getWidth(),
-                    fi[i].getValue().getHeight()
-            );
-
-            this.elements[i].setColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
-            /* switch (fi[i].getKey()) {
+            //this.elements[i].setColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+            switch (fi[i].getKey()) {
                 case FIXED:
+                    tempo = new Brick((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
+                            (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
+                            fi[i].getValue().getWidth(),
+                            fi[i].getValue().getHeight()
+                    );
+                    tempo.setOriginal(fi[i].getValue());
+                    tempo.setImg(Resources.getInstance().getImage("bricks"));
+                    this.elements[i]=tempo;
                     break;
                 case BREAKABLE:
+                    tempo2 = new BrickBreakable((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
+                            (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
+                            fi[i].getValue().getWidth(),
+                            fi[i].getValue().getHeight()
+                    );
+                    tempo2.setOriginal(fi[i].getValue());
+                    tempo2.setImg(Resources.getInstance().getImage("bricks"));
+                    this.elements[i]=tempo2;
                     break;
                 case LADDER:
+                    tempo3 = new Ladder((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
+                            (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
+                            fi[i].getValue().getWidth(),
+                            fi[i].getValue().getHeight()
+                    );
+                    tempo3.setOriginal(fi[i].getValue());
+                    tempo3.setImg(Resources.getInstance().getImage("bricks"));
+                    this.elements[i]=tempo3;
                     break;
 
-            }*/
+            }
         }
 
     }
@@ -147,8 +170,9 @@ public class Board implements IKeyListener {
         this.clear();
         if (this.elements != null) {
             for (int i = 0; i < this.elements.length; i++) {
-
-                this.elements[i].paint(gc);
+                if (this.elements[i] != null) {
+                    this.elements[i].paint(gc);
+                }
             }
         }
 
@@ -248,6 +272,11 @@ public class Board implements IKeyListener {
         if (this.actual_level >= this.levels.length) {
             this.actual_level = 0;
         }
+//        if (this.nextLevel()!=null){
+//            this.backgroundsound.stop();
+//        }
+//        this.backgroundsound=Resources.getInstance().getSound("fondo");
+//        this.backgroundsound.play();
         this.levels[this.actual_level].analyze();
         this.createElementsLevel();
 

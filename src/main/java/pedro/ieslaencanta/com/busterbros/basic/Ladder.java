@@ -6,6 +6,7 @@ package pedro.ieslaencanta.com.busterbros.basic;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import pedro.ieslaencanta.com.busterbros.Game;
 
 /**
  *
@@ -18,13 +19,23 @@ public class Ladder extends Element{
         super();
     }
     
-    public Ladder(Rectangle2D original, double x, double y, double width, double height) {
+    public Ladder(double x, double y, double width, double height) {
         super(x, y, width, height);
-        this.original = original;
     }
     
     @Override
-    public void paint(GraphicsContext gc){  
+    public void paint(GraphicsContext gc){
+        gc.drawImage(this.img,
+                this.original.getMinX(),
+                this.original.getMinY(),
+                this.original.getWidth(),
+                this.original.getHeight(),
+                //Se pinta en el juego.
+                this.rectangle.getMinX()*Game.SCALE,
+                this.rectangle.getMinY()*Game.SCALE,
+                this.rectangle.getWidth()*Game.SCALE,
+                this.rectangle.getHeight()*Game.SCALE
+        );
     }
     
     /**
@@ -33,4 +44,11 @@ public class Ladder extends Element{
     public void setOriginal(Rectangle2D original) {
         this.original = original;
     }   
+
+    /**
+     * @return the original
+     */
+    public Rectangle2D getOriginal() {
+        return original;
+    }
 }

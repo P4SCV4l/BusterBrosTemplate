@@ -7,6 +7,7 @@ package pedro.ieslaencanta.com.busterbros.basic;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import pedro.ieslaencanta.com.busterbros.Game;
 import pedro.ieslaencanta.com.busterbros.basic.interfaces.IDebuggable;
@@ -21,6 +22,7 @@ public class Element implements IDebuggable, IDrawable {
     private boolean debug;
     protected Rectangle2D rectangle;
     private Color color;
+    protected Image img;
 
     public Element() {
 
@@ -150,6 +152,13 @@ public class Element implements IDebuggable, IDrawable {
 
             this.debug(gc);
         }*/
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(Image img) {
+        this.img = img;
     }
 
 }

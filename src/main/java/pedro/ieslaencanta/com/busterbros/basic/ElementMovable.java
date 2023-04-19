@@ -4,18 +4,11 @@
  */
 package pedro.ieslaencanta.com.busterbros.basic;
 
-
 /**
  *
- * @author PC
+ * @author DAWTarde
  */
-public class BrickBreakable extends Brick{
-
-    public BrickBreakable() {
-        super();
-    }
-    
-    public BrickBreakable(double x, double y, double width, double height){
-        super(x, y, width, height);
-    }
+public class ElementMovable extends ElementDynamic implements IMovable {
+    double vx;
+    double vy;
 }
