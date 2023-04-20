@@ -11,7 +11,8 @@ package pedro.ieslaencanta.com.busterbros.basic.interfaces;
 public interface IState {
     public enum State{
         START,
-        STOP
+        STOP,
+        PAUSE
     }
     public void stop();
     public void start();

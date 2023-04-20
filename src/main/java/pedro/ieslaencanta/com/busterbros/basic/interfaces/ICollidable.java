@@ -4,6 +4,7 @@
  */
 package pedro.ieslaencanta.com.busterbros.basic.interfaces;
 
+import java.util.Optional;
 import pedro.ieslaencanta.com.busterbros.basic.Collision;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
 

@@ -16,8 +16,10 @@ import javafx.util.Pair;
 import pedro.ieslaencanta.com.busterbros.basic.Brick;
 import pedro.ieslaencanta.com.busterbros.basic.BrickBreakable;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
+import pedro.ieslaencanta.com.busterbros.basic.ElementMovable;
 import pedro.ieslaencanta.com.busterbros.basic.Ladder;
 import pedro.ieslaencanta.com.busterbros.basic.Level;
+import pedro.ieslaencanta.com.busterbros.basic.interfaces.IMovable;
 
 ;
 
@@ -32,10 +34,11 @@ import pedro.ieslaencanta.com.busterbros.basic.Level;
 public class Board implements IKeyListener {
 
     private Rectangle2D game_zone;
-
+    
     private GraphicsContext gc;
     private GraphicsContext bggc;
     private final Dimension2D original_size;
+    
 
     private boolean debug;
     private boolean left_press, right_press, up_press, down_press;
@@ -43,7 +46,8 @@ public class Board implements IKeyListener {
     private int actual_level = -1;
     private MediaPlayer backgroundsound;
     private Element[] elements;
-
+    private ElementMovable jugador;
+    
     public Board(Dimension2D original) {
         this.gc = null;
         this.game_zone = new Rectangle2D(8, 8, 368, 192);
@@ -59,7 +63,7 @@ public class Board implements IKeyListener {
 
         this.createLevels();
         this.nextLevel();
-
+        this.jugador=new ElementMovable(50,50,32,32);
     }
 
     private void createLevels() {
@@ -90,7 +94,6 @@ public class Board implements IKeyListener {
     private void createElementsLevel() {
         Brick tempo;
         BrickBreakable tempo2;
-        Ladder tempo3;
         Pair<Level.ElementType, Rectangle2D>[] fi = this.levels[this.actual_level].getFigures();
         this.elements = new Element[fi.length];
         for (int i = 0; i < fi.length; i++) {
@@ -105,10 +108,12 @@ public class Board implements IKeyListener {
                     );
                     tempo.setOriginal(fi[i].getValue());
                     tempo.setImg(Resources.getInstance().getImage("bricks"));
+                    
                     this.elements[i]=tempo;
                     break;
                 case BREAKABLE:
-                    tempo2 = new BrickBreakable((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
+                    tempo2 = new BrickBreakable(
+                            (fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
                             (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
                             fi[i].getValue().getWidth(),
                             fi[i].getValue().getHeight()
@@ -118,14 +123,15 @@ public class Board implements IKeyListener {
                     this.elements[i]=tempo2;
                     break;
                 case LADDER:
-                    tempo3 = new Ladder((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
+                    Ladder ladder = new Ladder(
+                            (fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
                             (fi[i].getValue().getMinY() - this.levels[this.actual_level].getY()),
                             fi[i].getValue().getWidth(),
                             fi[i].getValue().getHeight()
                     );
-                    tempo3.setOriginal(fi[i].getValue());
-                    tempo3.setImg(Resources.getInstance().getImage("bricks"));
-                    this.elements[i]=tempo3;
+                    ladder.setOriginal(fi[i].getValue());
+                    ladder.setImg(Resources.getInstance().getImage("bricks"));
+                    this.elements[i]=ladder;
                     break;
 
             }
@@ -159,11 +165,16 @@ public class Board implements IKeyListener {
     }
 
     private void update() {
+        for(int i=0;i<this.elements.length;i++){
+            if(this.elements[i]!=null && this.elements[i] instanceof ElementMovable){
+                ((ElementMovable)this.elements[i]).move();
+            }
+        }
 
     }
 
     private void evalCollisions() {
-
+        
     }
 
     private void render() {
@@ -174,6 +185,7 @@ public class Board implements IKeyListener {
                     this.elements[i].paint(gc);
                 }
             }
+            this.jugador.paint(gc);
         }
 
     }
@@ -181,12 +193,18 @@ public class Board implements IKeyListener {
     private void process_input() {
 
         if (this.left_press) {
-
+            this.jugador.moveLeft(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                this.jugador.setPosition(this.game_zone.getMinX(),this.jugador.getRectangle().getMinY());
+            }
         } else if (this.right_press) {
+            this.jugador.moveRight(2);
         }
         if (this.up_press) {
+            this.jugador.moveUp(2);
         }
         if (this.down_press) {
+            this.jugador.moveDown(2);
         }
 
     }
