@@ -148,10 +148,10 @@ public class Element implements IDebuggable, IDrawable {
         gc.setFill(this.color);
         //se tendrá que sustituro por img
         gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        /* if (this.isDebug()) {
+        if (this.isDebug()) {
 
             this.debug(gc);
-        }*/
+        }
     }
 
     /**

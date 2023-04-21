@@ -19,6 +19,7 @@ public class ElementMovable extends ElementDynamic implements IMovable {
         super(x, y, width, height);
     }
     public ElementMovable(){
+        super();
     }
     
     @Override

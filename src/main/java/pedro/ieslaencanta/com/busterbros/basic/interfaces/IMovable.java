@@ -19,6 +19,7 @@ public interface IMovable {
         NONE
     }
     public BorderCollision IsInBorder(Rectangle2D border);
+    
     public void move(double x, double y);
     
     public void move();

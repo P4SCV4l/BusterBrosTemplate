@@ -170,7 +170,16 @@ public class Board implements IKeyListener {
                 ((ElementMovable)this.elements[i]).move();
             }
         }
-
+        /*jugador.move();
+        IMovable.BorderCollision b = this.jugador.IsInBorder(game_zone);
+        switch (b) {
+            case DOWN:
+                this.jugador.setVy(Math.abs(this.jugador.getVy()));
+                break;
+            default:
+                throw new AssertionError();
+        }
+        */
     }
 
     private void evalCollisions() {
@@ -199,12 +208,21 @@ public class Board implements IKeyListener {
             }
         } else if (this.right_press) {
             this.jugador.moveRight(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                this.jugador.setPosition(this.game_zone.getMaxX()-this.jugador.getWidth(),this.jugador.getRectangle().getMinY());
+            }
         }
-        if (this.up_press) {
+        else if (this.up_press) {
             this.jugador.moveUp(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMinY());
+            }
         }
-        if (this.down_press) {
+        else if (this.down_press) {
             this.jugador.moveDown(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugador.getHeight());
+            }
         }
 
     }
@@ -280,6 +298,10 @@ public class Board implements IKeyListener {
             case N:
                 this.nextLevel();
                 break;
+                
+            case S:
+                this.setDebug();
+                break;
 
         }
 
@@ -301,5 +323,10 @@ public class Board implements IKeyListener {
         this.paintBackground();
         Game.reset_counter();
 
+    }
+    
+    public void setDebug(){
+        this.debug=!this.debug;
+        this.jugador.setDebug(debug);
     }
 }
