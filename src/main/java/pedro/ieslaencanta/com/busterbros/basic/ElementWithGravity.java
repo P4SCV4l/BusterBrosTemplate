@@ -20,7 +20,7 @@ public class ElementWithGravity extends ElementMovable implements IGravity {
     public ElementWithGravity() {
         super();
     }
-
+    
     public ElementWithGravity(double gx, double gy) {
         this.gx = gx;
         this.gy = gy;
@@ -41,12 +41,12 @@ public class ElementWithGravity extends ElementMovable implements IGravity {
 
     @Override
     public boolean isActiveHorizontalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.activegravityx;
     }
 
     @Override
     public boolean isActiveVerticalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.activegravityy;
     }
 
     @Override
@@ -73,32 +73,32 @@ public class ElementWithGravity extends ElementMovable implements IGravity {
 
     @Override
     public void unactiveHorizontalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.activegravityx = false;
     }
 
     @Override
     public void unactiveVerticalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.activegravityy = false;
     }
 
     @Override
     public void setHorizontalGravity(double gravity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.gx = gravity;
     }
 
     @Override
     public void setVerticalGravity(double gravity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.gy = gravity;
     }
 
     @Override
     public double getHorizontalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       return this.gx;
     }
 
     @Override
     public double getVerticalGravity() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.gy;
     }
 
     @Override
