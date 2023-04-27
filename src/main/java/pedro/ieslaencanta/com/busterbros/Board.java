@@ -13,10 +13,14 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import pedro.ieslaencanta.com.busterbros.basic.Ball;
+import pedro.ieslaencanta.com.busterbros.basic.BallColor;
+import pedro.ieslaencanta.com.busterbros.basic.BallType;
 import pedro.ieslaencanta.com.busterbros.basic.Brick;
 import pedro.ieslaencanta.com.busterbros.basic.BrickBreakable;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
 import pedro.ieslaencanta.com.busterbros.basic.ElementMovable;
+import pedro.ieslaencanta.com.busterbros.basic.ElementWithGravity;
 import pedro.ieslaencanta.com.busterbros.basic.Ladder;
 import pedro.ieslaencanta.com.busterbros.basic.Level;
 import pedro.ieslaencanta.com.busterbros.basic.interfaces.IMovable;
@@ -46,7 +50,8 @@ public class Board implements IKeyListener {
     private int actual_level = -1;
     private MediaPlayer backgroundsound;
     private Element[] elements;
-    private ElementMovable jugador;
+    private ElementWithGravity jugador;
+    private Ball ball;
     
     public Board(Dimension2D original) {
         this.gc = null;
@@ -63,7 +68,8 @@ public class Board implements IKeyListener {
 
         this.createLevels();
         this.nextLevel();
-        this.jugador=new ElementMovable(50,50,32,32);
+        this.jugador=new ElementWithGravity(2, 2, true, true, 50,50,32,32);
+        this.ball= new Ball(0, 0.1, 0.2, 0, 86, 50, BallType.BIG, BallColor.BLUE);
     }
 
     private void createLevels() {
@@ -195,6 +201,7 @@ public class Board implements IKeyListener {
                 }
             }
             this.jugador.paint(gc);
+            this.ball.paint(gc);
         }
 
     }
@@ -224,7 +231,20 @@ public class Board implements IKeyListener {
                 this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugador.getHeight());
             }
         }
-
+        ball.move();
+        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+            
+            this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMaxY()-this.ball.getHeight());
+        }
+        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+                this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMinY());
+        }
+        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
+        }
+        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
+            }
     }
 
     /**

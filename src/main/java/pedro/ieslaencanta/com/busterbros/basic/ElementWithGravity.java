@@ -105,4 +105,15 @@ public class ElementWithGravity extends ElementMovable implements IGravity {
     public void update() {
 
     }
+    
+    @Override
+    public void move(){
+        super.move();
+        if(this.isActiveHorizontalGravity()){
+        setVx(this.getVx()+gx);
+        }
+        if(this.isActiveVerticalGravity()){
+        setVy(this.getVy()+gy);
+        }
+    }
 }

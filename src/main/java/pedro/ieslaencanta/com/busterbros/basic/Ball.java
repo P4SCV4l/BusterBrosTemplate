@@ -17,8 +17,6 @@ import  pedro.ieslaencanta.com.busterbros.basic.Brick;
 public class Ball extends ElementWithGravity {
     private double original_vx;
     private double original_vy;
-    private double x;
-    private double y;
     private BallType type;
     private BallColor color;
     private BallType next;
@@ -28,14 +26,14 @@ public class Ball extends ElementWithGravity {
     }
     
     public Ball(double gx, double gy, double vx, double vy, double x, double y, BallType type, BallColor color){
-        super(gx, gy);
-        this.x = x;
-        this.y = y;
+        super(gx, gy, true, true, x, y, type.getWidth(), type.getHeight());
         this.original_vx = original_vx;
         this.original_vy = original_vy;
         this.type = type;
         this.color = color;
     }
+
+    
     
     public void update(Rectangle2D game_zone){
         
@@ -88,5 +86,8 @@ public class Ball extends ElementWithGravity {
         this.color = color;
     }
     
+    public void reset(){
+        
+    }
     
 }

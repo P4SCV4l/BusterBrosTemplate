@@ -9,7 +9,22 @@ package pedro.ieslaencanta.com.busterbros.basic;
  * @author PC
  */
 public enum BallColor {
-    RED,
-    GREEN,
-    BLUE
+    RED(1),
+    GREEN(1),
+    BLUE(1);
+    
+    private final int starty;
+
+    private BallColor(int starty) {
+        this.starty = starty;
+    }
+
+    /**
+     * @return the starty
+     */
+    public int getStarty() {
+        return starty;
+    }
+    
+    
 }
