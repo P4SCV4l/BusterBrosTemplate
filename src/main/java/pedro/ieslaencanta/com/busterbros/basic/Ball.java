@@ -89,5 +89,4 @@ public class Ball extends ElementWithGravity {
     public void reset(){
         
     }
-    
 }

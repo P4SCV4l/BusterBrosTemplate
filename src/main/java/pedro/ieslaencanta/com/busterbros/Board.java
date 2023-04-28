@@ -69,7 +69,7 @@ public class Board implements IKeyListener {
         this.createLevels();
         this.nextLevel();
         this.jugador=new ElementWithGravity(2, 2, true, true, 50,50,32,32);
-        this.ball= new Ball(0, 0.1, 0.2, 0, 86, 50, BallType.BIG, BallColor.BLUE);
+        this.ball= new Ball(0.0, 0.1, 0.4, 0.4, 86, 50, BallType.BIG, BallColor.BLUE);
     }
 
     private void createLevels() {
@@ -232,19 +232,38 @@ public class Board implements IKeyListener {
             }
         }
         ball.move();
-        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-            
-            this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMaxY()-this.ball.getHeight());
-        }
-        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-                this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMinY());
-        }
-        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-                this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
-        }
-        if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-                this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
+    //    for (int i = 0; i < 4; i++)
+            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+//                double delta = this.ball.getRectangle().getMaxY() - this.game_zone.getMaxY();
+                double vy=this.ball.getVy();
+                //System.out.println(vy + " -> " + delta);
+                vy*=-0.975;
+                
+                //vy+=delta;
+                this.ball.setVy(vy);
+                this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMaxY()-this.ball.getHeight());
             }
+            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+//                double delta = this.game_zone.getMinY() - this.ball.getRectangle().getMinY();
+                double vy=this.ball.getVy();
+                vy*=+0.975;
+//                vy+=delta;
+                this.ball.setVy(vy);
+                    this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMinY());
+            }
+            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                double vx = this.ball.getVx();
+                vx*=-0.975;
+                this.ball.setVx(vx);
+                    this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
+            }
+            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                    this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
+                double vx = this.ball.getVx();
+                vx*=+0.975;
+                this.ball.setVx(vx);
+            }
+        //}
     }
 
     /**
