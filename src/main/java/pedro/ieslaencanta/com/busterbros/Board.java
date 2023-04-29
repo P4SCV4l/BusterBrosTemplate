@@ -4,6 +4,7 @@
  */
 package pedro.ieslaencanta.com.busterbros;
 
+import java.util.Optional;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,8 +17,11 @@ import javafx.util.Pair;
 import pedro.ieslaencanta.com.busterbros.basic.Ball;
 import pedro.ieslaencanta.com.busterbros.basic.BallColor;
 import pedro.ieslaencanta.com.busterbros.basic.BallType;
+import pedro.ieslaencanta.com.busterbros.basic.Balls;
 import pedro.ieslaencanta.com.busterbros.basic.Brick;
 import pedro.ieslaencanta.com.busterbros.basic.BrickBreakable;
+import pedro.ieslaencanta.com.busterbros.basic.Bros;
+import pedro.ieslaencanta.com.busterbros.basic.Collision;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
 import pedro.ieslaencanta.com.busterbros.basic.ElementMovable;
 import pedro.ieslaencanta.com.busterbros.basic.ElementWithGravity;
@@ -52,7 +56,9 @@ public class Board implements IKeyListener {
     private Element[] elements;
     private ElementWithGravity jugador;
     private Ball ball;
-    
+    private Balls balls;
+    private Bros jugado;
+//    double vx=-1;
     public Board(Dimension2D original) {
         this.gc = null;
         this.game_zone = new Rectangle2D(8, 8, 368, 192);
@@ -69,7 +75,12 @@ public class Board implements IKeyListener {
         this.createLevels();
         this.nextLevel();
         this.jugador=new ElementWithGravity(2, 2, true, true, 50,50,32,32);
+        this.jugado= new Bros(0.0, 0.1, 0.5, 0.5, actual_level, actual_level);
         this.ball= new Ball(0.0, 0.1, 0.4, 0.4, 86, 50, BallType.BIG, BallColor.BLUE);
+        this.ball.setVx(-1);
+        this.ball.setVy(0);
+        
+        this.balls=new Balls(40);
     }
 
     private void createLevels() {
@@ -202,68 +213,18 @@ public class Board implements IKeyListener {
             }
             this.jugador.paint(gc);
             this.ball.paint(gc);
+            this.jugado.paint(gc);
+            for (int i=0; i<this.balls.getSize(); i++) {
+                if (this.balls.getBall(i) != null) {
+                    this.balls.getBall(i).paint(gc);
+                }
+            }
         }
 
     }
 
     private void process_input() {
-
-        if (this.left_press) {
-            this.jugador.moveLeft(2);
-            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-                this.jugador.setPosition(this.game_zone.getMinX(),this.jugador.getRectangle().getMinY());
-            }
-        } else if (this.right_press) {
-            this.jugador.moveRight(2);
-            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-                this.jugador.setPosition(this.game_zone.getMaxX()-this.jugador.getWidth(),this.jugador.getRectangle().getMinY());
-            }
-        }
-        else if (this.up_press) {
-            this.jugador.moveUp(2);
-            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMinY());
-            }
-        }
-        else if (this.down_press) {
-            this.jugador.moveDown(2);
-            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugador.getHeight());
-            }
-        }
-        ball.move();
-    //    for (int i = 0; i < 4; i++)
-            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-//                double delta = this.ball.getRectangle().getMaxY() - this.game_zone.getMaxY();
-                double vy=this.ball.getVy();
-                //System.out.println(vy + " -> " + delta);
-                vy*=-0.975;
-                
-                //vy+=delta;
-                this.ball.setVy(vy);
-                this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMaxY()-this.ball.getHeight());
-            }
-            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-//                double delta = this.game_zone.getMinY() - this.ball.getRectangle().getMinY();
-                double vy=this.ball.getVy();
-                vy*=+0.975;
-//                vy+=delta;
-                this.ball.setVy(vy);
-                    this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMinY());
-            }
-            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-                double vx = this.ball.getVx();
-                vx*=-0.975;
-                this.ball.setVx(vx);
-                    this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
-            }
-            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-                    this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
-                double vx = this.ball.getVx();
-                vx*=+0.975;
-                this.ball.setVx(vx);
-            }
-        //}
+        this.movimientos();
     }
 
     /**
@@ -366,6 +327,173 @@ public class Board implements IKeyListener {
     
     public void setDebug(){
         this.debug=!this.debug;
-        this.jugador.setDebug(debug);
+//        this.jugador.setDebug(debug);
+    }
+    
+    public void movimientos(){
+        if (this.left_press) {
+            this.jugador.moveLeft(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                this.jugador.setPosition(this.game_zone.getMinX(),this.jugador.getRectangle().getMinY());
+            }
+        } else if (this.right_press) {
+            this.jugador.moveRight(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                this.jugador.setPosition(this.game_zone.getMaxX()-this.jugador.getWidth(),this.jugador.getRectangle().getMinY());
+            }
+        }
+        else if (this.up_press) {
+            this.jugador.moveUp(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMinY());
+            }
+        }
+        else if (this.down_press) {
+            this.jugador.moveDown(2);
+            if(this.jugador.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugador.getHeight());
+            }
+        }
+
+        
+        if (this.left_press) {
+            this.jugado.moveLeft(2);
+            if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                this.jugado.setPosition(this.game_zone.getMinX(),this.jugado.getRectangle().getMinY());
+            }
+        } else if (this.right_press) {
+            this.jugado.moveRight(2);
+            if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                this.jugado.setPosition(this.game_zone.getMaxX()-this.jugado.getWidth(),this.jugado.getRectangle().getMinY());
+            }
+        }
+        if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+                this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+            }
+        if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+                this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugado.getHeight());
+                this.jugado.setVerticalGravity(0);
+            }
+        
+//        if((this.jugado.getCenterY())<(this.game_zone.getMaxY()-16)){
+// //            this.jugado.moveDown(2);
+//            this.jugado.move();
+//        }
+            if((this.jugado.getRectangle().getMaxY())<(this.game_zone.getMaxY())){
+                this.jugado.move();
+            }
+//        if((this.jugado.getCenterY()+(Bros.getHEIGHT()/2))<(this.game_zone.getMaxY())){
+////            this.jugado.moveDown(2);
+//            this.jugado.move();
+//        }
+//        if(!(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN)){
+//            this.jugado.move();
+//        }
+//        if(!(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN) && !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.TOP) && 
+//                !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT) && !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT)){
+////            this.jugado.moveDown(2);
+//            this.jugado.move();
+//            
+//        }
+
+
+
+       ball.move();
+//        // double vx=this.ball.getVx();
+       double vy=this.ball.getVy();
+        vy*=-0.975;
+//    //    for (int i = 0; i < 4; i++)
+           if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+//                double delta = this.ball.getRectangle().getMaxY() - this.game_zone.getMaxY();
+//                double vy=this.ball.getVy();
+               //System.out.println(vy + " -> " + delta);
+//                vy*=-0.975;
+               //vy+=delta;
+                this.ball.setVy(vy);
+//                   this.ball.setVy(-4.5);
+//                this.ball.reset();
+//                this.ball.setVy(-this.ball.getVy());
+               this.ball.setVx(this.ball.getVx());
+               
+               // if(this.vx<-3.667590){
+               //     this.vx=1;
+               //     this.ball.setVx(this.vx);
+               // }else{
+               //     this.vx=-1;
+               //     this.ball.setVx(this.vx);
+               // }
+               this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMaxY()-this.ball.getHeight());
+               
+           }
+           if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+//                double delta = this.game_zone.getMinY() - this.ball.getRectangle().getMinY();
+//                double vy=this.ball.getVy();
+//                vy*=-0.975;
+////                vy+=delta;
+//                this.ball.setVy(vy);
+                   this.ball.setVy(vy);
+               
+                   this.ball.setPosition(this.ball.getRectangle().getMinX(), this.game_zone.getMinY());
+           }
+           if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+//                double vx = this.ball.getVx();
+//                vx*=-0.975;
+//                this.ball.setVx(v);
+//                this.ball.setVx(this.ball.getVx());
+//                this.ball.setVx(-1);
+               this.ball.setVx(-this.ball.getVx());
+//                    this.vx=-1;
+                   // this.ball.setVx(this.vx);
+                   // this.ball.setVx(this.vx);
+                   this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
+           }
+//            
+//            if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+//                this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
+//                this.ball.moveRight(-this.ball.getVx());
+//            }
+           if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                   this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
+//                double vx = this.ball.getVx();
+//                vx*=+0.975;
+//                this.ball.setVx(-v);
+//                this.ball.setVx(-this.ball.getVx());
+//                this.ball.setVx(1);
+                   this.ball.setVx(-this.ball.getVx());
+//                    this.vx=1;
+                   // this.ball.setVx(this.vx);
+//                    this.ball.moveRight(this.vx);
+               
+                   
+                   // this.ball.setVx(this.vx);
+               
+           }
+            
+        
+    //     for(int i = 0; i<this.balls.getSize(); i++){
+    //         if(this.balls.getBall(i) != null){
+    //         this.balls.getBall(i).move();
+    //     double vy=this.balls.getBall(i).getVy();
+    //      vy*=-0.975;
+    //         if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+    //             this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+
+    //             this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMaxY()-this.balls.getBall(i).getHeight());
+                
+    //         }
+    //         if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+    //                 this.balls.getBall(i).setVy(vy);
+                
+    //                 this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMinY());
+    //         }
+    //         if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+    //             this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+    //                 this.balls.getBall(i).setPosition(this.game_zone.getMaxX()-this.balls.getBall(i).getWidth(),this.balls.getBall(i).getRectangle().getMinY());
+    //         }
+    //         if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+    //                 this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
+    //         }
+    //     }
+    // }
     }
 }

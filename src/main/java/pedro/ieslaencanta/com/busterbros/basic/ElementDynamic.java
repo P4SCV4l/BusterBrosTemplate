@@ -27,7 +27,16 @@ public class ElementDynamic extends Element implements ICollidable, IState{
    
     @Override
     public Optional<Collision> collision(Element e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collision c=null;
+        Optional<Collision> r;
+        if(this.getRectangle().intersects(e.getRectangle())){
+            c= new Collision();
+            c.setA(this);
+            c.setB(e);
+            c.setDistance(this.getCenter().distance(e.getCenter()));
+        }
+        r=(c==null)?Optional.empty(): Optional.of(c);
+        return r;
     }
 
     @Override

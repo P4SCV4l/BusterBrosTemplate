@@ -27,8 +27,8 @@ public class Ball extends ElementWithGravity {
     
     public Ball(double gx, double gy, double vx, double vy, double x, double y, BallType type, BallColor color){
         super(gx, gy, true, true, x, y, type.getWidth(), type.getHeight());
-        this.original_vx = original_vx;
-        this.original_vy = original_vy;
+        this.original_vx = vx;
+        this.original_vy = vy;
         this.type = type;
         this.color = color;
     }
@@ -87,6 +87,6 @@ public class Ball extends ElementWithGravity {
     }
     
     public void reset(){
-        
+        this.setVy(this.original_vy);
     }
 }

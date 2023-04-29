@@ -21,10 +21,6 @@ public class Bros extends ElementWithGravity{
     private boolean paused;
     private int state_counter;
     private int lifes;
-    private double vx;
-    private double vy;
-    private double x;
-    private double y;
 
     public Bros() {
         super();
@@ -35,11 +31,7 @@ public class Bros extends ElementWithGravity{
     }
 
     public Bros(double gx, double gy, double vx, double vy, double x, double y) {
-        super(gx, gy);
-        this.vx = vx;
-        this.vy = vy;
-        this.x = x;
-        this.y = y;
+        super(gx, gy, true, true, x, y, Bros.WIDTH, Bros.HEIGHT); 
     }
 
 //    public ElementResizable shoot(){
@@ -55,26 +47,26 @@ public class Bros extends ElementWithGravity{
     
     @Override
     public void moveUp(double inc){
-        
+        super.moveUp(inc);
     }
     
     @Override
     public void moveDown(double inc){
-        
+        super.moveDown(inc);
     }
     
     @Override
     public void moveLeft(){
-        
+        super.moveLeft();
     }
     
     @Override
     public void moveRight(){
-        
+        super.moveRight();
     }
     
     public void setStopped(){
-        
+
     }
     
     public void setPaused(){
@@ -99,5 +91,19 @@ public class Bros extends ElementWithGravity{
     
     public void changeWeapon(){
         
+    }
+
+    /**
+     * @return the WIDTH
+     */
+    public static float getWIDTH() {
+        return WIDTH;
+    }
+
+    /**
+     * @return the HEIGHT
+     */
+    public static float getHEIGHT() {
+        return HEIGHT;
     }
 }
