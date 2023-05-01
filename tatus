@@ -1,0 +1,53 @@
+[33mcommit 1920e9b51734be08ade92b47044fa2b2ba5ca09c[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Sat Apr 29 20:04:11 2023 +0200
+
+    Jugador creado y movimiento horizontal para la pelota.
+
+[33mcommit 7f5399f495ee15ee4af4c211027aeacc0f378d9f[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Fri Apr 28 21:14:38 2023 +0200
+
+    Gravedad y rebotes ejeY desarrollados.
+
+[33mcommit 5cb9c48dea57e0a0a2dddc9a03830309155dae72[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Thu Apr 27 18:16:27 2023 +0200
+
+    Por terminar ElementWithGravity, BallColor y falta añadir vector de bolas.
+
+[33mcommit 239418bc261c1e033eff50435d1775dedbcf6605[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Sun Apr 23 21:59:34 2023 +0200
+
+    Terminada la clase ElementWithGravity, creadas las clases Ball y Bros, creados los enums BallColor y BallType. | 23/04/2023
+
+[33mcommit 4150626a3b08c8433e946f70e068e0c21bae5f5f[m
+Author: José Examen <jose@examen.com>
+Date:   Fri Apr 21 20:31:54 2023 +0200
+
+    ElementWithGravity añadido y terminados choques bordes. | 21/04/2023
+
+[33mcommit f59420707054598731f505b09655c88602b3cb10[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Thu Apr 20 18:28:21 2023 +0200
+
+    ElementMovable 20/04/2023
+
+[33mcommit 3694534a0817d48b69f62fe93cc3162b68ae8ec7[m
+Author: José Examen <jose@examen.com>
+Date:   Wed Apr 19 18:16:52 2023 +0200
+
+    Primera clase con Pedro. | 19/04/2023
+
+[33mcommit eff7f719bbcda957b932f8482dade7e63f8e1c14[m
+Author: José Pascual Vázquez <al037006@ieslaencanta.com>
+Date:   Wed Apr 19 11:55:40 2023 +0200
+
+    Añadidas clases Brick, BrickBreakable, ElementDynamic, Ladder e interfaces ICollidable, IState. | 19/04/2023
+
+[33mcommit 7222d95c05effd47845825b7211d8557282595c5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: pass1enator <pass1enator@gmail.com>
+Date:   Mon Apr 17 21:52:13 2023 +0200
+
+    Inicio

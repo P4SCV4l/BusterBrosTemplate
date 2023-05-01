@@ -11,7 +11,7 @@ import pedro.ieslaencanta.com.busterbros.basic.interfaces.IMovable;
  *
  * @author DAWTarde
  */
-public class ElementMovable extends ElementDynamic implements IMovable {
+public abstract class ElementMovable extends ElementDynamic implements IMovable {
     private double vx;
     private double vy;
     

@@ -40,7 +40,7 @@ public class Balls {
         return index;
     }
 
-    // public void addBall(Ball b, int i) {
+    // public void addBall(Ball b) {
     //     // for (int i = 0; i < this.elements.length; i++) {
     //     //     if (this.elements[i] == null) {
     //     //         this.elements[i] = b;
@@ -71,5 +71,44 @@ public class Balls {
 
     public boolean isEmpty() {
         return (this.getNumberOfElements() <= 0);
+    }
+    
+    public void dividir(Ball b){
+        switch (b.getType()) {
+            case EXTRABIG:
+                Ball b1 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.BIG, b.getColor());
+                this.addBall(b1);
+                b1.setVx(b.getVx());
+                Ball b2 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), -b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.BIG, b.getColor());
+                this.addBall(b2);
+                b2.setVx(-b.getVx());
+                removeBall(b);
+                break;
+            
+            case BIG:
+                Ball b3 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.MEDIUM, b.getColor());
+                this.addBall(b3);
+                b3.setVx(b.getVx());
+                Ball b4 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), -b.getVx(), -b.getVy(), b.getCenterX(), b.getCenterY(), BallType.MEDIUM, b.getColor());
+                this.addBall(b4);
+                b4.setVx(-b.getVx());
+                removeBall(b);
+                break;
+                
+            case MEDIUM:
+                Ball b5 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.LITTLE, b.getColor());
+                this.addBall(b5);
+                b5.setVx(b.getVx());
+                Ball b6 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), -b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.LITTLE, b.getColor());
+                this.addBall(b6);
+                b6.setVx(-b.getVx());
+                removeBall(b);
+                break;
+                
+            case LITTLE:
+                removeBall(b);
+            default:
+                throw new AssertionError();
+        }
     }
 }
