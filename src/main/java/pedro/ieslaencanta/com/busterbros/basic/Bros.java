@@ -14,8 +14,8 @@ import pedro.ieslaencanta.com.busterbros.Game;
  */
 public class Bros extends ElementWithGravity{
 //    private Weapon weapon;
-    private static final float WIDTH = 30;
-    private static final float HEIGHT = 32;
+    public static final float WIDTH = 30;
+    public static final float HEIGHT = 32;
     private int frecuency;
     private State state;
     private boolean paused;
@@ -91,19 +91,5 @@ public class Bros extends ElementWithGravity{
     
     public void changeWeapon(){
         
-    }
-
-    /**
-     * @return the WIDTH
-     */
-    public static float getWIDTH() {
-        return WIDTH;
-    }
-
-    /**
-     * @return the HEIGHT
-     */
-    public static float getHEIGHT() {
-        return HEIGHT;
     }
 }

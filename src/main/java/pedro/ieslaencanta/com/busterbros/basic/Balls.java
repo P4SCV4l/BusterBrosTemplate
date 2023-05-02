@@ -107,6 +107,7 @@ public class Balls {
                 
             case LITTLE:
                 removeBall(b);
+                break;
             default:
                 throw new AssertionError();
         }

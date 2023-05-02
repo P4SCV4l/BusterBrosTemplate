@@ -366,14 +366,14 @@ public class Board implements IKeyListener {
         } else if (this.right_press) {
             this.jugado.moveRight(2);
             if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-                this.jugado.setPosition(this.game_zone.getMaxX()-this.jugado.getWidth(),this.jugado.getRectangle().getMinY());
+                this.jugado.setPosition(this.game_zone.getMaxX()-Bros.WIDTH,this.jugado.getRectangle().getMinY());
             }
         }
         if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
                 this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
             }
         if(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-                this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY()-this.jugado.getHeight());
+                this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY()-Bros.HEIGHT);
 //                this.jugado.setVerticalGravity(0);
             }
         

@@ -23,7 +23,7 @@ public class Hook extends ElementResizable {
     }
     
     public Hook(double x, double y, double iw, double ih) {
-        super(iw, ih, x, y, Hook.WIDTH, Bros.getHEIGHT());
+        super(iw, ih, x, y, Hook.WIDTH, Bros.HEIGHT);
     }
 
     @Override
