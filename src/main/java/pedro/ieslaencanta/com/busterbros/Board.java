@@ -213,7 +213,9 @@ public class Board implements IKeyListener {
                 }
             }
             this.jugador.paint(gc);
+            if(this.jugado != null){
             this.jugado.paint(gc);
+            }
             for (int i=0; i<this.balls.getSize(); i++) {
                 if (this.balls.getBall(i) != null) {
                     this.balls.getBall(i).paint(gc);
@@ -503,13 +505,35 @@ public class Board implements IKeyListener {
              }
              
              
-             //Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
-             /*if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+             /*Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
+             if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
                      && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
                      && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
                      && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
                  this.balls.dividir(this.balls.getBall(i));
-             }*/
+             }
+             */
+             
+             
+             
+            //Restar vidas del jugador. 
+            if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+                     && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+                     && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+                     && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+                 this.jugado.restarVida();
+                //  this.balls.getBall(i).setPosition(0, 0);
+                this.balls.getBall(i).setVy(vy);
+                // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+            }
+
+
+
+            //Eliminar al jugador.
+            // if(this.jugado.getLifes()<0){
+            //     this.jugado = null;
+            // }
+             
          }
      }
     }

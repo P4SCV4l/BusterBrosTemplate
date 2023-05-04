@@ -32,6 +32,7 @@ public class Bros extends ElementWithGravity{
 
     public Bros(double gx, double gy, double vx, double vy, double x, double y) {
         super(gx, gy, true, true, x, y, Bros.WIDTH, Bros.HEIGHT); 
+        this.lifes=3;
     }
 
 //    public ElementResizable shoot(){
@@ -91,5 +92,17 @@ public class Bros extends ElementWithGravity{
     
     public void changeWeapon(){
         
+    }
+    
+    public void restarVida(){
+                 this.lifes--;
+    }
+
+    
+    /**
+     * @return the lifes
+     */
+    public int getLifes() {
+        return lifes;
     }
 }
