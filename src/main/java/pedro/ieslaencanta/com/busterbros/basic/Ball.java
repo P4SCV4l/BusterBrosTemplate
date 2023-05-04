@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package pedro.ieslaencanta.com.busterbros.basic;
+import java.util.Optional;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import pedro.ieslaencanta.com.busterbros.Game;
@@ -53,10 +54,6 @@ public class Ball extends ElementWithGravity {
             this.debug(gc);
         }
     }
-    
-    public void evalCollision(Brick brick) {
-        
-    }
 
     /**
      * @return the type
@@ -88,5 +85,23 @@ public class Ball extends ElementWithGravity {
     
     public void reset(){
         this.setVy(this.original_vy);
+    }
+    
+    public Optional<Collision> collisionWithBricks(){
+        
+        return null;
+        
+    }
+    
+    public int evalCollisionX(Brick brick) {
+        
+        return 0;
+        
+    }
+    
+    public int evalCollisionY(Brick brick) {
+        
+        return 0;
+        
     }
 }

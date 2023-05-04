@@ -78,9 +78,11 @@ public class Balls {
             case EXTRABIG:
                 Ball b1 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.BIG, b.getColor());
                 this.addBall(b1);
+                b1.setPosition(b.getRectangle().getMinX()-25, b1.getRectangle().getMinY());
                 b1.setVx(b.getVx());
                 Ball b2 = new Ball(b.getHorizontalGravity(), b.getVerticalGravity(), -b.getVx(), b.getVy(), b.getCenterX(), b.getCenterY(), BallType.BIG, b.getColor());
                 this.addBall(b2);
+                b1.setPosition(b.getRectangle().getMaxX()+25, b1.getRectangle().getMinY());
                 b2.setVx(-b.getVx());
                 removeBall(b);
                 break;

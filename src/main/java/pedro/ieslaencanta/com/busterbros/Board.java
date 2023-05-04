@@ -302,7 +302,7 @@ public class Board implements IKeyListener {
             case S:
                 this.setDebug();
                 break;
-              
+                              
         }
 
     }
@@ -501,6 +501,15 @@ public class Board implements IKeyListener {
                      this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
                      this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
              }
+             
+             
+             //Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
+             /*if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+                     && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+                     && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+                     && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+                 this.balls.dividir(this.balls.getBall(i));
+             }*/
          }
      }
     }
