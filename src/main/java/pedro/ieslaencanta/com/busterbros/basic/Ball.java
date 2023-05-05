@@ -4,8 +4,12 @@
  */
 package pedro.ieslaencanta.com.busterbros.basic;
 import java.util.Optional;
+
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Separator;
+import javafx.scene.shape.Rectangle;
 import pedro.ieslaencanta.com.busterbros.Game;
 import  pedro.ieslaencanta.com.busterbros.basic.BallColor;
 import  pedro.ieslaencanta.com.busterbros.basic.BallType;
@@ -87,21 +91,66 @@ public class Ball extends ElementWithGravity {
         this.setVy(this.original_vy);
     }
     
-    public Optional<Collision> collisionWithBricks(){
+    public Optional<Collision> collisionWithBrick(Element e) {
+        Optional<Collision> c= super.collision(e);
+        if(c.isPresent()){
+            System.out.println("Colisiona");
+            double dx=this.evalCollisionX(e);
+            double dy=this.evalCollisionY(e);
+            c.get().setSeparator(new Point2D(dx,dy));
+        }
+       // e.getRectangle().
+       // e.getRectangle().Separator(Point2D(dx,dy));
+        // var inter = intersection(getRectangle(), brick.getRectangle());
+        // if (inter.getWidth() < 0.01 && inter.getHeight() < 0.01) {
+        //     return Optional.empty();
+        // }
         
-        return null;
+
+         return c;
         
     }
-    
-    public int evalCollisionX(Brick brick) {
-        
-        return 0;
-        
-    }
-    
-    public int evalCollisionY(Brick brick) {
-        
-        return 0;
-        
-    }
+    public double evalCollisionX(Element e){
+        double distancia=0;
+        Rectangle2D x=new Rectangle2D(this.rectangle.getMinX(),
+            this.rectangle.getMinY()-this.getVy(), 
+            this.rectangle.getWidth(), 
+            this.rectangle.getHeight());
+            if(x.intersects(e.getRectangle())){
+              if(x.getMinX()<e.getRectangle().getMinX()){
+                distancia=e.getRectangle().getMinX()-x.getMaxX();
+              }else{
+                distancia=e.getRectangle().getMaxX()-x.getMinX();
+              }
+            }
+      return distancia;
+    } 
+    public double evalCollisionY(Element e){
+        double distancia=0;
+        Rectangle2D x=new Rectangle2D(this.rectangle.getMinX()-this.getVx(),
+            this.rectangle.getMinY(), 
+            this.rectangle.getWidth(), 
+            this.rectangle.getHeight());
+            if(x.intersects(e.getRectangle())){
+                if(x.getMinY()<e.getRectangle().getMinY()){
+                  distancia=e.getRectangle().getMinY()-x.getMaxY();
+                }else{
+                  distancia=e.getRectangle().getMaxY()-x.getMinY();
+                }
+              }
+        return distancia;
+    } 
+
+    // Rectangle2D intersection(Rectangle2D rect1, Rectangle2D rect2)
+    // {
+    //     double newX = Math.max(rect1.getMinX(), rect2.getMinX());
+    //     double newY = Math.max(rect1.getMinY(), rect2.getMinY());
+
+    //     double newWidth = Math.min(rect1.getMinX() + rect1.getWidth(), rect2.getMinX() + rect2.getWidth()) - newX;
+    //     double newHeight = Math.min(rect1.getMinY() + rect1.getHeight(), rect2.getMinY() + rect2.getHeight()) - newY;
+
+    //     if (newWidth <= 0d || newHeight <= 0d) return null;
+
+    //     return new Rectangle2D(newX, newY, newWidth, newHeight);
+    // }
 }

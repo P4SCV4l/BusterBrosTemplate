@@ -201,7 +201,37 @@ public class Board implements IKeyListener {
     }
 
     private void evalCollisions() {
-        
+        for(int i = 0; i<this.balls.getSize(); i++){
+            if(this.balls.getBall(i) != null){
+            this.balls.getBall(i).move();
+               double vy=this.balls.getBall(i).getVy();
+                vy*=-0.975;
+            if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+                this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+                this.balls.getBall(i).setVy(vy);
+                this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMaxY()-this.balls.getBall(i).getHeight());
+            }
+            if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+                    this.balls.getBall(i).setVy(vy);
+               
+                    this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMinY());
+            }
+            if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+                this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+                    this.balls.getBall(i).setPosition(this.game_zone.getMaxX()-this.balls.getBall(i).getWidth(),this.balls.getBall(i).getRectangle().getMinY());
+            }
+            if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+                    this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+            }
+            for(int j=0;j<elements.length;j++){
+            if(elements[j] instanceof Brick){
+                this.balls.getBall(i).collisionWithBrick(elements[j]);
+                
+            }
+        }
+        }
+        }
     }
 
     private void render() {
@@ -227,6 +257,7 @@ public class Board implements IKeyListener {
 
     private void process_input() {
         this.movimientos();
+        this.evalCollisions();
     }
 
     /**
@@ -479,62 +510,62 @@ public class Board implements IKeyListener {
 //           }
             
         
-         for(int i = 0; i<this.balls.getSize(); i++){
-             if(this.balls.getBall(i) != null){
-             this.balls.getBall(i).move();
-                double vy=this.balls.getBall(i).getVy();
-                 vy*=-0.975;
-             if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-                 this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-                 this.balls.getBall(i).setVy(vy);
-                 this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMaxY()-this.balls.getBall(i).getHeight());
+    //      for(int i = 0; i<this.balls.getSize(); i++){
+    //          if(this.balls.getBall(i) != null){
+    //          this.balls.getBall(i).move();
+    //             double vy=this.balls.getBall(i).getVy();
+    //              vy*=-0.975;
+    //          if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
+    //              this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+    //              this.balls.getBall(i).setVy(vy);
+    //              this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMaxY()-this.balls.getBall(i).getHeight());
                 
-             }
-             if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-                     this.balls.getBall(i).setVy(vy);
+    //          }
+    //          if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
+    //                  this.balls.getBall(i).setVy(vy);
                 
-                     this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMinY());
-             }
-             if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-                 this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-                     this.balls.getBall(i).setPosition(this.game_zone.getMaxX()-this.balls.getBall(i).getWidth(),this.balls.getBall(i).getRectangle().getMinY());
-             }
-             if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-                     this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
-                     this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-             }
+    //                  this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(), this.game_zone.getMinY());
+    //          }
+    //          if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
+    //              this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+    //                  this.balls.getBall(i).setPosition(this.game_zone.getMaxX()-this.balls.getBall(i).getWidth(),this.balls.getBall(i).getRectangle().getMinY());
+    //          }
+    //          if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
+    //                  this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
+    //                  this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+    //          }
              
              
-             /*Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
-             if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
-                     && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
-                     && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
-                     && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
-                 this.balls.dividir(this.balls.getBall(i));
-             }
-             */
+    //          /*Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
+    //          if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+    //                  && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+    //                  && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+    //                  && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+    //              this.balls.dividir(this.balls.getBall(i));
+    //          }
+    //          */
              
              
              
-            //Restar vidas del jugador. 
-            if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
-                     && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
-                     && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
-                     && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
-                 this.jugado.restarVida();
-                //  this.balls.getBall(i).setPosition(0, 0);
-                this.balls.getBall(i).setVy(vy);
-                // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-            }
+    //         //Restar vidas del jugador. 
+    //         if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+    //                  && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+    //                  && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+    //                  && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+    //              this.jugado.restarVida();
+    //             //  this.balls.getBall(i).setPosition(0, 0);
+    //             this.balls.getBall(i).setVy(vy);
+    //             // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+    //         }
 
 
 
-            //Eliminar al jugador.
-            // if(this.jugado.getLifes()<0){
-            //     this.jugado = null;
-            // }
+    //         //Eliminar al jugador.
+    //         // if(this.jugado.getLifes()<0){
+    //         //     this.jugado = null;
+    //         // }
              
-         }
-     }
+    //      }
+    //  }
     }
 }
