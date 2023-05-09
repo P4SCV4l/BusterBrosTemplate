@@ -9,9 +9,9 @@ package pedro.ieslaencanta.com.busterbros.basic;
  * @author PC
  */
 public enum BallColor {
-    RED(1),
-    GREEN(1),
-    BLUE(1);
+    RED(6),
+    GREEN(105),
+    BLUE(56);
     
     private final int starty;
 

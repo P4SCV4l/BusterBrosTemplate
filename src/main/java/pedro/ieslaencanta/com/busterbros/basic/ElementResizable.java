@@ -23,6 +23,10 @@ public class ElementResizable extends ElementDynamic implements IResizable {
         this.ih = ih;
     }
 
+    public ElementResizable(double x, double y, double width, double height){
+        super(x, y, width, height);
+    }
+    
     public ElementResizable(double iw, double ih, double x, double y, double width, double height) {
         super(x, y, width, height);
         this.iw = iw;
@@ -57,5 +61,19 @@ public class ElementResizable extends ElementDynamic implements IResizable {
     @Override
     public void setDefaultIncHeigth(double inch) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    /**
+     * @return the ih
+     */
+    public double getIh() {
+        return ih;
+    }
+
+    /**
+     * @param ih the ih to set
+     */
+    public void setIh(double ih) {
+        this.ih = ih;
     }
 }

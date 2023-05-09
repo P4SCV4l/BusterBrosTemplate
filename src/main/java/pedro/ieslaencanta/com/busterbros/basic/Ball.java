@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Separator;
 import javafx.scene.shape.Rectangle;
 import pedro.ieslaencanta.com.busterbros.Game;
+import pedro.ieslaencanta.com.busterbros.Resources;
 import  pedro.ieslaencanta.com.busterbros.basic.BallColor;
 import  pedro.ieslaencanta.com.busterbros.basic.BallType;
 import  pedro.ieslaencanta.com.busterbros.basic.Brick;
@@ -57,6 +58,18 @@ public class Ball extends ElementWithGravity {
 
             this.debug(gc);
         }
+        // Resources r = Resources.getInstance();
+        // gc.drawImage(r.getImage("ballons"),
+        // //inicio de la posicion
+        // this.getType().getStartx(),
+        // this.getColor().getStarty(),
+        // this.getType().getWidth(),
+        // this.getType().getHeight(),
+        // //dibujar en el lienzo
+        // (this.getRectangle().getMinX()) * Game.SCALE,
+        // (this.getRectangle().getMinY()) * Game.SCALE,
+        // this.getType().getWidth() * Game.SCALE,
+        // this.getType().getHeight() * Game.SCALE);
     }
 
     /**

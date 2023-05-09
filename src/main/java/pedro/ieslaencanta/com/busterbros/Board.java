@@ -24,7 +24,9 @@ import pedro.ieslaencanta.com.busterbros.basic.Bros;
 import pedro.ieslaencanta.com.busterbros.basic.Collision;
 import pedro.ieslaencanta.com.busterbros.basic.Element;
 import pedro.ieslaencanta.com.busterbros.basic.ElementMovable;
+import pedro.ieslaencanta.com.busterbros.basic.ElementResizable;
 import pedro.ieslaencanta.com.busterbros.basic.ElementWithGravity;
+import pedro.ieslaencanta.com.busterbros.basic.Hook;
 import pedro.ieslaencanta.com.busterbros.basic.Ladder;
 import pedro.ieslaencanta.com.busterbros.basic.Level;
 import pedro.ieslaencanta.com.busterbros.basic.interfaces.IMovable;
@@ -58,7 +60,10 @@ public class Board implements IKeyListener {
     private Ball ball;
     private Balls balls;
     private Bros jugado;
+    private Hook hook;
     Optional<Collision> c;
+    private int contador;
+    private Hook[] hooks;
 //    double vx=-1;
     public Board(Dimension2D original) {
         this.gc = null;
@@ -70,7 +75,7 @@ public class Board implements IKeyListener {
         this.down_press = false;
 
         this.debug = false;
-
+        hooks = new Hook[10];
         this.actual_level = 12;
 
         this.createLevels();
@@ -188,6 +193,9 @@ public class Board implements IKeyListener {
             if(this.elements[i]!=null && this.elements[i] instanceof ElementMovable){
                 ((ElementMovable)this.elements[i]).move();
             }
+            // else if(this.elements[i]!=null && this.elements[i] instanceof ElementResizable && contador > 0){
+            //     ((Hook)this.elements[i]).update();
+            // }
         }
         /*jugador.move();
         IMovable.BorderCollision b = this.jugador.IsInBorder(game_zone);
@@ -231,10 +239,10 @@ public class Board implements IKeyListener {
                 //restaurar a borde
                 //y mirar separator x y de y para cambiar vx o vy
                 // try{
-              /*   if(c.isPresent() && c.get().getA() instanceof ElementMovable){
+                /*if(c.isPresent() && c.get().getA() instanceof ElementMovable){
                     ElementMovable a = (ElementMovable) c.get().getA();
 
-                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinY()){
+                if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinY()){
                     this.balls.getBall(i).setVy(this.balls.getBall(i).getVy());
                     
                 }
@@ -247,16 +255,16 @@ public class Board implements IKeyListener {
                    
                 }
                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxX()){
-                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx();
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
                    
-                }*/
-              /*/  Rectangle2D rx1 = new Rectangle2D(a.getRectangle().getMinX()-a.getVx(), a.getRectangle().getMinY(), a.getRectangle().getWidth(), a.getRectangle().getHeight());
+                }
+                Rectangle2D rx1 = new Rectangle2D(a.getRectangle().getMinX()-a.getVx(), a.getRectangle().getMinY(), a.getRectangle().getWidth(), a.getRectangle().getHeight());
                 Rectangle2D rx2 = new Rectangle2D(a.getRectangle().getMinX()+a.getVx(), a.getRectangle().getMinY(), a.getRectangle().getWidth(), a.getRectangle().getHeight());
                 System.out.println("VX=" + a.getVx() + " BX=" + c.get().getB().getRectangle().getMinX() + "-" + c.get().getB().getRectangle().getMaxX() + " AX=" + a.getRectangle().getMinX() + "-" + a.getRectangle().getMaxX() + " RX=" + rx1.getMinX() + "-" + rx1.getMaxX());
                 if(!c.get().getA().getRectangle().intersects(rx1) || !c.get().getA().getRectangle().intersects(rx2)){
                     a.setVx(-a.getVx());
-                }-*
-            }
+                }
+            }*/
 
             // this.balls.getBall(i).setPosition(c.get().getSeparator().getX(), this.balls.getBall(i).getRectangle().getMinY());
             // }catch(java.util.NoSuchElementException error){
@@ -282,6 +290,15 @@ public class Board implements IKeyListener {
             this.jugador.paint(gc);
             if(this.jugado != null){
             this.jugado.paint(gc);
+            // if (this.hook != null){
+            // this.hook.paint(gc);
+            // }
+            for(int i=0; i<this.hooks.length; i++){
+                if(this.hooks[i] != null){
+                    this.hooks[i].paint(gc);
+                    contador++;
+                }
+            }
             }
             for (int i=0; i<this.balls.getSize(); i++) {
                 if (this.balls.getBall(i) != null) {
@@ -295,6 +312,7 @@ public class Board implements IKeyListener {
     private void process_input() {
         this.movimientos();
         this.evalCollisions();
+        // this.aumentar();
     }
 
     /**
@@ -372,7 +390,24 @@ public class Board implements IKeyListener {
             case S:
                 this.setDebug();
                 break;
-                              
+                
+            case F:
+                this.hook = new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+                // this.hooks[0]=new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+                // this.contador++;
+                break;
+
+            case SPACE:
+                this.hook.resizeHeigth();
+                for(int i=0; i<this.hooks.length; i++){
+                    if(this.hooks[i] != null){
+                        this.hooks[i] = null;
+                    }
+                    if(this.hooks[i] == null){
+                        this.hooks[i] = new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+                    }
+                }      
+                break;
         }
 
     }
@@ -546,9 +581,9 @@ public class Board implements IKeyListener {
 //               
 //           }
             
-        
-    //      for(int i = 0; i<this.balls.getSize(); i++){
-    //          if(this.balls.getBall(i) != null){
+            int i = 0;
+          for(; i<this.balls.getSize(); i++){
+              
     //          this.balls.getBall(i).move();
     //             double vy=this.balls.getBall(i).getVy();
     //              vy*=-0.975;
@@ -573,14 +608,15 @@ public class Board implements IKeyListener {
     //          }
              
              
-    //          /*Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
-    //          if(this.jugado.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
-    //                  && this.jugado.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
-    //                  && this.jugado.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
-    //                  && this.jugado.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
-    //              this.balls.dividir(this.balls.getBall(i));
-    //          }
-    //          */
+             //Sustituir los valores de jugador por los del gancho en el siguiente "if", para conseguir las explosiones de las bolas con los ganchos.
+            //  if(this.hook.getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+            //          && this.hook.getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+            //          && this.hook.getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+            //          && this.hook.getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+            //      this.balls.dividir(this.balls.getBall(i));
+            //  }
+             
+             
              
              
              
@@ -602,7 +638,28 @@ public class Board implements IKeyListener {
     //         //     this.jugado = null;
     //         // }
              
-    //      }
-    //  }
+            for(int j=0; j<this.hooks.length; j++){
+                if(this.balls.getBall(i) != null){
+                    if(this.hooks[j] != null){
+                        if(this.hooks[j].getRectangle().getMaxX() >= this.balls.getBall(i).getRectangle().getMinX() 
+                            && this.hooks[j].getRectangle().getMinX() <= this.balls.getBall(i).getRectangle().getMaxX()
+                            && this.hooks[j].getRectangle().getMaxY() >= this.balls.getBall(i).getRectangle().getMinY()
+                            && this.hooks[j].getRectangle().getMinY() <= this.balls.getBall(i).getRectangle().getMaxY()){
+                                this.balls.dividir(this.balls.getBall(i));
+                        }
+                    }
+                }
+            }
+        }
     }
+    // public void aumentar(){
+    //     for(int i=0; i<this.hooks.length; i++){
+    //         if(this.hooks[i] != null){
+    //             this.hooks[i] = null;
+    //         }
+    //         if(this.hooks[i] == null && contador>0){
+    //             this.hooks[i] = new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+    //         }
+    //     } 
+    // }
 }
