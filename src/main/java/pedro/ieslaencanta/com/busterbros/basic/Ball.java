@@ -94,10 +94,16 @@ public class Ball extends ElementWithGravity {
     public Optional<Collision> collisionWithBrick(Element e) {
         Optional<Collision> c= super.collision(e);
         if(c.isPresent()){
-            System.out.println("Colisiona");
+            System.out.println("Element e || MaxX: " + e.getRectangle().getMaxX() + 
+            " MinX:" + e.getRectangle().getMinX() + " MaxY: " + e.getRectangle().getMaxY() + " MinY: " + e.getRectangle().getMinY());
+            // System.out.println("Element c || MaxX:" + e.getRectangle().getMaxX() + 
+            // "MinX:" + e.getRectangle().getMinX() + "MaxY:" + e.getRectangle().getMaxY() + "MinY:" + e.getRectangle().getMinY());
             double dx=this.evalCollisionX(e);
             double dy=this.evalCollisionY(e);
+            System.out.println("dx:" + dx);
+            System.out.println("dy:" + dy);
             c.get().setSeparator(new Point2D(dx,dy));
+            System.out.println(c.get().getSeparator());
         }
        // e.getRectangle().
        // e.getRectangle().Separator(Point2D(dx,dy));

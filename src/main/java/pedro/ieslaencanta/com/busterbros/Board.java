@@ -58,6 +58,7 @@ public class Board implements IKeyListener {
     private Ball ball;
     private Balls balls;
     private Bros jugado;
+    Optional<Collision> c;
 //    double vx=-1;
     public Board(Dimension2D original) {
         this.gc = null;
@@ -77,7 +78,7 @@ public class Board implements IKeyListener {
         this.jugador=new ElementWithGravity(2, 2, true, true, 50,50,32,32);
         this.jugado= new Bros(0.0, 0.1, 0.5, 0.5, game_zone.getMaxX()/2, game_zone.getMaxY());
         this.ball= new Ball(0.0, 0.1, 0.4, 0.4, 86, 50, BallType.EXTRABIG, BallColor.BLUE);
-        this.ball.setVx(-1);
+        this.ball.setVx(1);
         this.ball.setVy(0);
         
         this.balls=new Balls(40);
@@ -226,8 +227,53 @@ public class Board implements IKeyListener {
             }
             for(int j=0;j<elements.length;j++){
             if(elements[j] instanceof Brick){
-                this.balls.getBall(i).collisionWithBrick(elements[j]);
+                this.c = this.balls.getBall(i).collisionWithBrick(elements[j]);
                 
+                // try{
+                if(c.isPresent()){
+                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinY()){
+                //     this.balls.getBall(i).setVy(this.balls.getBall(i).getVy());
+                    
+                // }
+                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinX()){
+                //     this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+                    
+                // }
+                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxY()){
+                //     this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
+                    
+                // }
+                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxX()){
+                //     this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+                    
+                // }
+                if(c.get().getSeparator(c.get())){
+                    this.balls.getBall(i).setVy(this.balls.getBall(i).getVy());
+                    
+                }
+                if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinX()){
+                    this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+                    
+                }
+                if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxY()){
+                    this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
+                    
+                }
+                if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxX()){
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+                    
+                }
+            
+            
+            }
+
+            // this.balls.getBall(i).setPosition(c.get().getSeparator().getX(), this.balls.getBall(i).getRectangle().getMinY());
+            // }catch(java.util.NoSuchElementException error){
+            //     c = null;
+            // }
+                // c.get().getSeparator();
+                // if(c.get().)
+
             }
         }
         }
