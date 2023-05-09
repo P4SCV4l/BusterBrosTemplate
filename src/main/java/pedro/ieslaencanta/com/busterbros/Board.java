@@ -228,43 +228,34 @@ public class Board implements IKeyListener {
             for(int j=0;j<elements.length;j++){
             if(elements[j] instanceof Brick){
                 this.c = this.balls.getBall(i).collisionWithBrick(elements[j]);
-                
+                //restaurar a borde
+                //y mirar separator x y de y para cambiar vx o vy
                 // try{
-                if(c.isPresent()){
-                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinY()){
-                //     this.balls.getBall(i).setVy(this.balls.getBall(i).getVy());
-                    
-                // }
-                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinX()){
-                //     this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-                    
-                // }
-                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxY()){
-                //     this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
-                    
-                // }
-                // if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxX()){
-                //     this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-                    
-                // }
-                if(c.get().getSeparator(c.get())){
+              /*   if(c.isPresent() && c.get().getA() instanceof ElementMovable){
+                    ElementMovable a = (ElementMovable) c.get().getA();
+
+                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinY()){
                     this.balls.getBall(i).setVy(this.balls.getBall(i).getVy());
                     
                 }
                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMinX()){
                     this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
                     
-                }
-                if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxY()){
+                 }
+                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxY()){
                     this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
-                    
+                   
                 }
                 if(c.get().getA().getDistance(c.get().getB())<elements[j].getRectangle().getMaxX()){
-                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-                    
-                }
-            
-            
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx();
+                   
+                }*/
+              /*/  Rectangle2D rx1 = new Rectangle2D(a.getRectangle().getMinX()-a.getVx(), a.getRectangle().getMinY(), a.getRectangle().getWidth(), a.getRectangle().getHeight());
+                Rectangle2D rx2 = new Rectangle2D(a.getRectangle().getMinX()+a.getVx(), a.getRectangle().getMinY(), a.getRectangle().getWidth(), a.getRectangle().getHeight());
+                System.out.println("VX=" + a.getVx() + " BX=" + c.get().getB().getRectangle().getMinX() + "-" + c.get().getB().getRectangle().getMaxX() + " AX=" + a.getRectangle().getMinX() + "-" + a.getRectangle().getMaxX() + " RX=" + rx1.getMinX() + "-" + rx1.getMaxX());
+                if(!c.get().getA().getRectangle().intersects(rx1) || !c.get().getA().getRectangle().intersects(rx2)){
+                    a.setVx(-a.getVx());
+                }-*
             }
 
             // this.balls.getBall(i).setPosition(c.get().getSeparator().getX(), this.balls.getBall(i).getRectangle().getMinY());
