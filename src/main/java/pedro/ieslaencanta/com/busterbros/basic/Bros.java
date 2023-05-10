@@ -7,6 +7,7 @@ package pedro.ieslaencanta.com.busterbros.basic;
 import java.util.Optional;
 import javafx.scene.canvas.GraphicsContext;
 import pedro.ieslaencanta.com.busterbros.Game;
+import pedro.ieslaencanta.com.busterbros.Resources;
 
 /**
  *
@@ -78,11 +79,23 @@ public class Bros extends ElementWithGravity{
     public void paint(GraphicsContext gc) {
 //        gc.setFill(this.color);
         //se tendrá que sustituro por img
-        gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        if (this.isDebug()) {
+        // gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
+        // if (this.isDebug()) {
 
-            this.debug(gc);
-        }
+        //     this.debug(gc);
+        // }
+        Resources r = Resources.getInstance();
+        gc.drawImage(r.getImage("player"),
+        //inicio de la posicion
+        12,
+        2,
+        Bros.WIDTH,
+        Bros.HEIGHT,
+        //dibujar en el lienzo
+        (this.getRectangle().getMinX()) * Game.SCALE,
+        (this.getRectangle().getMinY()) * Game.SCALE,
+        Bros.WIDTH * Game.SCALE,
+        Bros.HEIGHT * Game.SCALE);
     }
     
     @Override

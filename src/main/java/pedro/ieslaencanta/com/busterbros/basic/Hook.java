@@ -14,9 +14,10 @@ import pedro.ieslaencanta.com.busterbros.Game;
  */
 public class Hook extends ElementResizable {
     private static final int WIDTH=30;
-    private static int HEIGHT=1;
+    private static final int ORIGINALHEIGHT=1;
+    public static int HEIGHT=1;
     private int vw;
-    private final int vy=10;
+    private final int vy=2;
     private static final int[] ARROWS=new int[1];
 
     public Hook() {
@@ -55,6 +56,10 @@ public class Hook extends ElementResizable {
 //            
 //        }
         
+    }
+
+    public void resetHeigth(){
+        this.HEIGHT=this.ORIGINALHEIGHT;
     }
 
     @Override
