@@ -13,7 +13,7 @@ import pedro.ieslaencanta.com.busterbros.Game;
  * @author PC
  */
 public class Hook extends ElementResizable {
-    private static final int WIDTH=30;
+    private static final int WIDTH=10;
     private static final int ORIGINALHEIGHT=1;
     public static int HEIGHT=1;
     private int vw;
@@ -33,10 +33,11 @@ public class Hook extends ElementResizable {
     }*/
     
     
-    
     @Override
     public void resizeHeigth() {
         Hook.HEIGHT=Hook.HEIGHT+this.vy;
+        // this.moveDown(HEIGHT);
+        // Hook hook = new Hook(this.getRectangle().getMinX(), 250);
     }
 
     @Override
@@ -50,6 +51,7 @@ public class Hook extends ElementResizable {
             this.debug(gc);
         }
     }
+
     
     public void ajustTop(Rectangle2D game_zone){
 //        if(this.getRectangle().getMinY()<=game_zone.getMaxY()){
@@ -67,6 +69,8 @@ public class Hook extends ElementResizable {
         this.resizeHeigth();
         // this.ajustTop(rectangle);
     }
+
+
 
     /**
      * @return the heigth
