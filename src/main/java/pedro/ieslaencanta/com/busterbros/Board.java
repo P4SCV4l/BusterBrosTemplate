@@ -196,7 +196,12 @@ public class Board implements IKeyListener {
             }
         }
         this.evalCollisions();
-        this.AumentarEliminar();
+        if(this.hook!=null){
+            this.hook.resizeHeigth();
+            // this.CollisionHook();
+
+        }
+        //this.AumentarEliminar();
         /*
          * for (int i = 0; i < this.elements.length; i++) {
          * if (this.elements[i] != null && this.elements[i] instanceof ElementMovable) {
@@ -263,6 +268,46 @@ public class Board implements IKeyListener {
                 }
             }
         }
+        
+        if (this.hook != null)
+        {
+            for (int j = 0; j < this.balls.getSize(); j++) {
+                for (int h = 0; h < elements.length; h++) {
+                    if (balls.getBall(j) != null) {
+                        if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
+                            this.hook = null;
+                            this.balls.dividir(this.balls.getBall(j));
+                        }
+                    }
+
+                    if (hook == null) j = balls.getSize();
+                }
+            }
+        }
+
+        if (this.hook != null)
+        {
+            for (int i = 0; i < elements.length; i++)
+            {
+                if (this.elements[i] != null)
+                {
+                    if (this.hook.getRectangle().intersects(elements[i].getRectangle())) {
+                            if (this.elements[i] instanceof BrickBreakable) {
+                                this.hook = null;
+                                this.elements[i] = null;
+                            } else if (this.elements[i] instanceof Brick) {
+                                this.hook = null;
+                            }
+                        }
+                }
+
+                if (hook == null) break;
+            }
+
+            if(hook != null && this.hook.ajustTop(game_zone)){
+                this.hook = null;
+            }
+        }
     }
 
     private void render() {
@@ -279,9 +324,10 @@ public class Board implements IKeyListener {
                 // if (this.hook != null){
                 // this.hook.paint(gc);
                 // }
-                    if (this.hook != null) {
-                        this.hook.paint(gc);
-                    }
+                    
+            }
+            if (this.hook != null) {
+                this.hook.paint(gc);
             }
             for (int i = 0; i < this.balls.getSize(); i++) {
                 if (this.balls.getBall(i) != null) {
@@ -380,29 +426,12 @@ public class Board implements IKeyListener {
                 break;
 
             case F:
-                hook = new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
-                if (this.hooks[0] != null) {
-                    this.hooks[0].resetHeigth();
-                    this.hooks[0] = null;
-                }
-                this.hooks[0] = new Hook(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
-                // this.hooks[0]=new Hook(this.jugado.getRectangle().getMinX(),
-                // this.game_zone.getMinY());
-                // this.contador++;
                 break;
-
-            // case SPACE:
-            // this.hooks[0].resizeHeigth();
-            // for(int i=0; i<this.hooks.length; i++){
-            // if(this.hooks[i] != null){
-            // this.hooks[i] = null;
-            // }
-            // if(this.hooks[i] == null){
-            // this.hooks[i] = new Hook(this.jugado.getRectangle().getMinX(),
-            // this.game_zone.getMinY());
-            // }
-            // }
-            // break;
+            case SPACE:
+            if(this.hook==null){
+                hook = new Hook(this.jugado.getCenterX(), this.jugado.getCenter().getY());
+            }
+                break;
         }
 
     }
@@ -488,13 +517,13 @@ public class Board implements IKeyListener {
             }
         }
         for (int i = 0; i < elements.length; i++) {
-            if (elements[i] instanceof Brick) {
-                if (this.jugado.getRectangle().intersects(elements[i].getRectangle())
+                if (elements[i] instanceof Brick 
+                        && this.jugado.getRectangle().intersects(elements[i].getRectangle())         
                         && this.jugado.isActiveVerticalGravity()) {
                     this.jugado.moveUp(5);
                     this.jugado.unactiveVerticalGravity();
                 }
-            }
+            
         }
 
         // for(int i=0;i<elements.length;i++){
@@ -750,7 +779,35 @@ public class Board implements IKeyListener {
     //         }
     //     }
     // }
-    public void AumentarEliminar() {
+
+    // public void CollisionHook(){
+    //     for (int j = 0; j < this.balls.getSize(); j++) {
+    //         for (int h = 0; h < elements.length; h++) {
+    //             if (balls.getBall(j) != null && this.hook != null) {
+    //                 if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
+    //                     this.hook = null;
+    //                     this.balls.dividir(this.balls.getBall(j));
+    //                 } else if (this.elements[h] != null) {
+    //                     if (this.hook.getRectangle().intersects(elements[h].getRectangle())) {
+    //                         if (this.elements[h] instanceof BrickBreakable) {
+    //                             this.hook = null;
+    //                             this.elements[h] = null;
+    //                         } else if (this.elements[h] instanceof Brick) {
+    //                             this.hook = null;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if(this.hook != null){
+    //         if(this.hook.ajustTop(game_zone)){
+    //             this.hook = null;
+    //         }
+    //     }
+    // }
+
+    /*public void AumentarEliminar() {
         if (this.hook != null) {
             double originalx = this.hook.getRectangle().getMinX();
                 if (this.hook.getRectangle().getMaxY() <= this.game_zone.getMaxY()) {
@@ -762,7 +819,7 @@ public class Board implements IKeyListener {
                         this.hook = new Hook(originalx, this.game_zone.getMinY());
                     }
                 } else {
-                    this.hook.resetHeigth();
+                   // this.hook.resizeHeigth();
                     this.hook = null;
                 }
                 for (int j = 0; j < this.balls.getSize(); j++) {
@@ -789,5 +846,5 @@ public class Board implements IKeyListener {
                 }
             
         }
-    }
+    }*/
 }

@@ -12,7 +12,7 @@ import pedro.ieslaencanta.com.busterbros.basic.interfaces.IResizable;
  *
  * @author PC
  */
-public class ElementResizable extends ElementDynamic implements IResizable, IMovable {
+public class ElementResizable extends ElementDynamic implements IResizable {
     private double iw;
     private double ih;
 
@@ -47,7 +47,10 @@ public class ElementResizable extends ElementDynamic implements IResizable, IMov
 
     @Override
     public void resizeHeigth() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.rectangle= new Rectangle2D(this.rectangle.getMinX(),
+        this.rectangle.getMinY()-ih,
+         this.rectangle.getWidth(),
+         this.rectangle.getHeight()+ ih);
     }
 
     @Override
@@ -77,73 +80,5 @@ public class ElementResizable extends ElementDynamic implements IResizable, IMov
      */
     public void setIh(double ih) {
         this.ih = ih;
-    }
-
-    @Override
-    public BorderCollision IsInBorder(Rectangle2D border) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'IsInBorder'");
-    }
-
-    @Override
-    public void move(double x, double y) {
-        this.rectangle= new Rectangle2D(
-                   this.rectangle.getMinX()+x,
-                   this.rectangle.getMinY()+y,
-                this.rectangle.getWidth(),
-                this.rectangle.getHeight());
-    }
-
-    @Override
-    public void move() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'move'");
-    }
-
-    @Override
-    public void moveLeft() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveLeft'");
-    }
-
-    @Override
-    public void moveLeft(double inc) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveLeft'");
-    }
-
-    @Override
-    public void moveRight() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveRight'");
-    }
-
-    @Override
-    public void moveRight(double inc) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveRight'");
-    }
-
-    @Override
-    public void moveUp() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveUp'");
-    }
-
-    @Override
-    public void moveUp(double inc) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveUp'");
-    }
-
-    @Override
-    public void moveDown() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveDown'");
-    }
-
-    @Override
-    public void moveDown(double inc) {
-        this.move(0,+inc);
     }
 }
