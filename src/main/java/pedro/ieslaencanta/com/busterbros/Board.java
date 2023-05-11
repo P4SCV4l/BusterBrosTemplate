@@ -26,6 +26,7 @@ import pedro.ieslaencanta.com.busterbros.basic.Element;
 import pedro.ieslaencanta.com.busterbros.basic.ElementMovable;
 import pedro.ieslaencanta.com.busterbros.basic.ElementResizable;
 import pedro.ieslaencanta.com.busterbros.basic.ElementWithGravity;
+import pedro.ieslaencanta.com.busterbros.basic.FixedHook;
 import pedro.ieslaencanta.com.busterbros.basic.Hook;
 import pedro.ieslaencanta.com.busterbros.basic.Ladder;
 import pedro.ieslaencanta.com.busterbros.basic.Level;
@@ -60,6 +61,7 @@ public class Board implements IKeyListener {
     private Balls balls;
     private Bros jugado;
     private Hook hook;
+    private FixedHook fixedhook;
     Optional<Collision> c;
     private int contador;
     private Hook[] hooks;
@@ -80,8 +82,8 @@ public class Board implements IKeyListener {
 
         this.createLevels();
         this.nextLevel();
-        this.jugador = new ElementWithGravity(2, 2, true, true, 50, 50, 32, 32);
-        this.jugado = new Bros(0.0, 0.1, 0.5, 0.5, game_zone.getMaxX() / 2, game_zone.getMaxY());
+        this.jugador = new ElementWithGravity(2, 2, true, true, 50, 50, 20, 20);
+        this.jugado = new Bros(0.0, 5, 0.5, 0, game_zone.getMaxX() / 2, game_zone.getMaxY());
         this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 86, 50, BallType.EXTRABIG, BallColor.BLUE);
         this.ball.setVx(1);
         this.ball.setVy(0);
@@ -199,7 +201,10 @@ public class Board implements IKeyListener {
         if(this.hook!=null){
             this.hook.resizeHeigth();
             // this.CollisionHook();
-
+        if(this.fixedhook!=null){
+            this.fixedhook.resizeHeigth();
+            this.fixedhook.stop();
+        }
         }
         //this.AumentarEliminar();
         /*
@@ -239,7 +244,6 @@ public class Board implements IKeyListener {
                             this.game_zone.getMaxY() - this.balls.getBall(i).getHeight());
                 } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
                     this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
-
                     this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
                             this.game_zone.getMinY());
                 } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.RIGHT) {
@@ -269,8 +273,7 @@ public class Board implements IKeyListener {
             }
         }
         
-        if (this.hook != null)
-        {
+        if (this.hook != null){
             for (int j = 0; j < this.balls.getSize(); j++) {
                 for (int h = 0; h < elements.length; h++) {
                     if (balls.getBall(j) != null) {
@@ -280,28 +283,29 @@ public class Board implements IKeyListener {
                         }
                     }
 
-                    if (hook == null) j = balls.getSize();
+                    if (hook == null){ 
+                        j = balls.getSize();
+                    }
                 }
             }
         }
 
-        if (this.hook != null)
-        {
-            for (int i = 0; i < elements.length; i++)
-            {
-                if (this.elements[i] != null)
-                {
+        if (this.hook != null){
+            for (int i = 0; i < elements.length; i++){
+                if (this.elements[i] != null){
                     if (this.hook.getRectangle().intersects(elements[i].getRectangle())) {
                             if (this.elements[i] instanceof BrickBreakable) {
                                 this.hook = null;
                                 this.elements[i] = null;
                             } else if (this.elements[i] instanceof Brick) {
                                 this.hook = null;
-                            }
                         }
+                    }
                 }
 
-                if (hook == null) break;
+                if (hook == null){ 
+                    i = balls.getSize();
+                }
             }
 
             if(hook != null && this.hook.ajustTop(game_zone)){
@@ -324,14 +328,25 @@ public class Board implements IKeyListener {
                 // if (this.hook != null){
                 // this.hook.paint(gc);
                 // }
-                    
+                if (this.jugado.isDebug())
+                {
+                    this.jugado.debug(gc);
+                }
             }
             if (this.hook != null) {
                 this.hook.paint(gc);
             }
+            if (this.fixedhook != null) {
+                this.fixedhook.paint(gc);
+            }
             for (int i = 0; i < this.balls.getSize(); i++) {
                 if (this.balls.getBall(i) != null) {
                     this.balls.getBall(i).paint(gc);
+
+                    if (this.balls.getBall(i).isDebug())
+                    {
+                        this.balls.getBall(i).debug(gc);
+                    }
                 }
             }
         }
@@ -426,6 +441,9 @@ public class Board implements IKeyListener {
                 break;
 
             case F:
+            if(this.fixedhook==null){
+                fixedhook = new FixedHook(this.jugado.getCenterX(), this.jugado.getCenter().getY());
+            }
                 break;
             case SPACE:
             if(this.hook==null){
@@ -459,6 +477,10 @@ public class Board implements IKeyListener {
         this.jugador.setDebug(debug);
         this.jugado.setDebug(debug);
         this.ball.setDebug(debug);
+        for (int i = 0; i < balls.getSize(); i++)
+        {
+            if (balls.getBall(i) != null) balls.getBall(i).setDebug(debug);
+        }
     }
 
     public void movimientos() {
@@ -508,12 +530,6 @@ public class Board implements IKeyListener {
 
                     }
                 }
-                // if(elements[i] instanceof Brick){
-                // if(this.jugado.getRectangle().intersects(elements[i].getRectangle())){
-                // this.jugado.moveUp(5);
-
-                // }
-                // }
             }
         }
         for (int i = 0; i < elements.length; i++) {
@@ -522,8 +538,7 @@ public class Board implements IKeyListener {
                         && this.jugado.isActiveVerticalGravity()) {
                     this.jugado.moveUp(5);
                     this.jugado.unactiveVerticalGravity();
-                }
-            
+            }      
         }
 
         // for(int i=0;i<elements.length;i++){
@@ -552,15 +567,16 @@ public class Board implements IKeyListener {
             for (int i = 0; i < elements.length; i++) {
                 if (elements[i] instanceof Ladder) {
                     if (this.jugado.getRectangle().intersects(elements[i].getRectangle())) {
-                        this.jugado.moveDown(2);
+
 
                     }
                 }
             }
         }
         if (this.jugado.IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
-            this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY() - Bros.HEIGHT);
-            // this.jugado.setVerticalGravity(0);
+            //this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY() - Bros.HEIGHT);
+            this.jugado.setVerticalGravity(0);
+            //this.jugado.moveDown(this.jugado.getVerticalGravity());
         }
 
         // if((this.jugado.getCenterY())<(this.game_zone.getMaxY()-16)){
@@ -569,8 +585,10 @@ public class Board implements IKeyListener {
         // }
         if ((this.jugado.getRectangle().getMaxY()) < (this.game_zone.getMaxY())) {
             // this.jugado.move();
-            this.jugado.moveDown(5);
+
             this.jugado.activeVerticalGravity();
+            this.jugado.setVerticalGravity(5);
+            this.jugado.moveDown(this.jugado.getVerticalGravity());
         }
         // if((this.jugado.getCenterY()+(Bros.HEIGHT/2))<(this.game_zone.getMaxY())){
         //// this.jugado.moveDown(2);
@@ -696,20 +714,13 @@ public class Board implements IKeyListener {
             // }
 
 
-            // //Restar vidas del jugador.
-            // if(this.jugado.getRectangle().getMaxX() >=
-            // this.balls.getBall(i).getRectangle().getMinX()
-            // && this.jugado.getRectangle().getMinX() <=
-            // this.balls.getBall(i).getRectangle().getMaxX()
-            // && this.jugado.getRectangle().getMaxY() >=
-            // this.balls.getBall(i).getRectangle().getMinY()
-            // && this.jugado.getRectangle().getMinY() <=
-            // this.balls.getBall(i).getRectangle().getMaxY()){
-            // this.jugado.restarVida();
-            // // this.balls.getBall(i).setPosition(0, 0);
+            //Restar vidas del jugador.
+            if(this.balls.getBall(i) != null && this.jugado.getRectangle().intersects(this.balls.getBall(i).getRectangle())){
+            this.jugado.restarVida();
+            // this.balls.getBall(i).setPosition(0, 0);
             // this.balls.getBall(i).setVy(vy);
-            // // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-            // }
+            // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+            }
 
             // //Eliminar al jugador.
             // // if(this.jugado.getLifes()<0){

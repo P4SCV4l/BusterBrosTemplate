@@ -53,23 +53,23 @@ public class Ball extends ElementWithGravity {
     public void paint(GraphicsContext gc) {
 //        gc.setFill(this.color);
         //se tendrá que sustituro por img
-        gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        if (this.isDebug()) {
+        // gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
+        // if (this.isDebug()) {
 
-            this.debug(gc);
-        }
-        // Resources r = Resources.getInstance();
-        // gc.drawImage(r.getImage("ballons"),
-        // //inicio de la posicion
-        // this.getType().getStartx(),
-        // this.getColor().getStarty(),
-        // this.getType().getWidth(),
-        // this.getType().getHeight(),
-        // //dibujar en el lienzo
-        // (this.getRectangle().getMinX()) * Game.SCALE,
-        // (this.getRectangle().getMinY()) * Game.SCALE,
-        // this.getType().getWidth() * Game.SCALE,
-        // this.getType().getHeight() * Game.SCALE);
+        //     this.debug(gc);
+        // }
+        Resources r = Resources.getInstance();
+        gc.drawImage(r.getImage("ballons"),
+        //inicio de la posicion
+        this.getType().getStartx(),
+        this.getType().getStarty() + this.getColor().getStarty(),
+        this.getType().getWidth(),
+        this.getType().getHeight(),
+        //dibujar en el lienzo
+        (this.getRectangle().getMinX()) * Game.SCALE,
+        (this.getRectangle().getMinY()) * Game.SCALE,
+        this.getType().getWidth() * Game.SCALE,
+        this.getType().getHeight() * Game.SCALE);
     }
 
     /**

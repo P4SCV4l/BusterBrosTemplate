@@ -108,7 +108,7 @@ public class Bros extends ElementWithGravity{
     }
     
     public void restarVida(){
-                 this.lifes--;
+        this.lifes--;
     }
 
     
