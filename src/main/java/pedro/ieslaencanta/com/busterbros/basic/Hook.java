@@ -34,12 +34,10 @@ public class Hook extends ElementResizable {
         this.rectangle.getMinY()-VY,
          this.rectangle.getWidth(),
          this.rectangle.getHeight()+ VY);
-         System.out.println(this.rectangle);
     }
 
     @Override
     public void paint(GraphicsContext gc) {
-        //se tendrá que sustituirlo por img
         gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, 
         this.getRectangle().getWidth() * 
         Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);

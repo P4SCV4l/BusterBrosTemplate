@@ -77,13 +77,6 @@ public class Bros extends ElementWithGravity{
     
     @Override
     public void paint(GraphicsContext gc) {
-//        gc.setFill(this.color);
-        //se tendrá que sustituro por img
-        // gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        // if (this.isDebug()) {
-
-        //     this.debug(gc);
-        // }
         Resources r = Resources.getInstance();
         gc.drawImage(r.getImage("player"),
         //inicio de la posicion

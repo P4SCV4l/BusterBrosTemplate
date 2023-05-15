@@ -51,13 +51,6 @@ public class Ball extends ElementWithGravity {
     
     @Override
     public void paint(GraphicsContext gc) {
-//        gc.setFill(this.color);
-        //se tendrá que sustituro por img
-        // gc.fillRect(this.getRectangle().getMinX() * Game.SCALE, this.getRectangle().getMinY() * Game.SCALE, this.getRectangle().getWidth() * Game.SCALE, this.getRectangle().getHeight() * Game.SCALE);
-        // if (this.isDebug()) {
-
-        //     this.debug(gc);
-        // }
         Resources r = Resources.getInstance();
         gc.drawImage(r.getImage("ballons"),
         //inicio de la posicion
@@ -104,30 +97,14 @@ public class Ball extends ElementWithGravity {
         this.setVy(this.original_vy);
     }
     
-    public Optional<Collision> collisionWithBrick(Element e) {
+    public Optional<Collision> collision(Element e) {
         Optional<Collision> c= super.collision(e);
         if(c.isPresent()){
-            System.out.println("Element e || MaxX: " + e.getRectangle().getMaxX() + 
-            " MinX:" + e.getRectangle().getMinX() + " MaxY: " + e.getRectangle().getMaxY() + " MinY: " + e.getRectangle().getMinY());
-            // System.out.println("Element c || MaxX:" + e.getRectangle().getMaxX() + 
-            // "MinX:" + e.getRectangle().getMinX() + "MaxY:" + e.getRectangle().getMaxY() + "MinY:" + e.getRectangle().getMinY());
             double dx=this.evalCollisionX(e);
             double dy=this.evalCollisionY(e);
-            System.out.println("dx:" + dx);
-            System.out.println("dy:" + dy);
             c.get().setSeparator(new Point2D(dx,dy));
-            System.out.println(c.get().getSeparator());
         }
-       // e.getRectangle().
-       // e.getRectangle().Separator(Point2D(dx,dy));
-        // var inter = intersection(getRectangle(), brick.getRectangle());
-        // if (inter.getWidth() < 0.01 && inter.getHeight() < 0.01) {
-        //     return Optional.empty();
-        // }
-        
-
          return c;
-        
     }
     public double evalCollisionX(Element e){
         double distancia=0;
@@ -159,17 +136,4 @@ public class Ball extends ElementWithGravity {
               }
         return distancia;
     } 
-
-    // Rectangle2D intersection(Rectangle2D rect1, Rectangle2D rect2)
-    // {
-    //     double newX = Math.max(rect1.getMinX(), rect2.getMinX());
-    //     double newY = Math.max(rect1.getMinY(), rect2.getMinY());
-
-    //     double newWidth = Math.min(rect1.getMinX() + rect1.getWidth(), rect2.getMinX() + rect2.getWidth()) - newX;
-    //     double newHeight = Math.min(rect1.getMinY() + rect1.getHeight(), rect2.getMinY() + rect2.getHeight()) - newY;
-
-    //     if (newWidth <= 0d || newHeight <= 0d) return null;
-
-    //     return new Rectangle2D(newX, newY, newWidth, newHeight);
-    // }
 }

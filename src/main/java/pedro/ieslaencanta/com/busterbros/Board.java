@@ -56,15 +56,11 @@ public class Board implements IKeyListener {
     private int actual_level = -1;
     private MediaPlayer backgroundsound;
     private Element[] elements;
-    private ElementWithGravity jugador;
     private Ball ball;
     private Balls balls;
-    private Bros jugado;
+    private Bros jugador;
     private Hook hook;
-    private FixedHook fixedhook;
     Optional<Collision> c;
-    private int contador;
-    private Hook[] hooks;
 
     // double vx=-1;
     public Board(Dimension2D original) {
@@ -77,21 +73,21 @@ public class Board implements IKeyListener {
         this.down_press = false;
 
         this.debug = false;
-        hooks = new Hook[1];
         this.actual_level = 12;
 
         this.createLevels();
         this.nextLevel();
-        this.jugador = new ElementWithGravity(2, 2, true, true, 50, 50, 20, 20);
-        this.jugado = new Bros(0.0, 5, 0.5, 0, game_zone.getMaxX() / 2, game_zone.getMaxY());
-        this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 86, 50, BallType.EXTRABIG, BallColor.BLUE);
+        this.jugador = new Bros(0.0, 5, 0.5, 0, game_zone.getMaxX() / 2, game_zone.getMaxY());
+        this.balls = new Balls(40);
+        this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 300, 50, BallType.EXTRABIG, BallColor.BLUE);
         this.ball.setVx(1);
         this.ball.setVy(0);
-
-        this.balls = new Balls(40);
+        this.balls.addBall(ball);
+        this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 40, 50, BallType.EXTRABIG, BallColor.RED);
+        this.ball.setVx(-1);
         this.balls.addBall(ball);
     }
-
+    //Crear niveles.
     private void createLevels() {
         int y = 44;
         this.levels = new Level[50];
@@ -116,7 +112,7 @@ public class Board implements IKeyListener {
             y += 216;
         }
     }
-
+    //Crear los elementos pertenecientes a cada nivel, almacenados en un array.
     private void createElementsLevel() {
         Brick tempo;
         BrickBreakable tempo2;
@@ -124,8 +120,7 @@ public class Board implements IKeyListener {
         this.elements = new Element[fi.length];
         for (int i = 0; i < fi.length; i++) {
 
-            // this.elements[i].setColor(Color.rgb((int) (Math.random() * 255), (int)
-            // (Math.random() * 255), (int) (Math.random() * 255)));
+
             switch (fi[i].getKey()) {
                 case FIXED:
                     tempo = new Brick((fi[i].getValue().getMinX() - this.levels[this.actual_level].getX()),
@@ -181,10 +176,8 @@ public class Board implements IKeyListener {
      */
     public synchronized void TicTac() {
         this.process_input();
-
         this.update();
         this.render();
-
         // actualizar
     }
 
@@ -192,152 +185,43 @@ public class Board implements IKeyListener {
      * 
      */
     private void update() {
-        for (int i = 0; i < this.balls.getSize(); i++) {
-            if (this.balls.getBall(i) != null) {
-                this.balls.getBall(i).move();
-            }
-        }
-        this.evalCollisions();
-        if(this.hook!=null){
-            this.hook.resizeHeigth();
-            // this.CollisionHook();
-        if(this.fixedhook!=null){
-            this.fixedhook.resizeHeigth();
-            this.fixedhook.stop();
-        }
-        }
-        //this.AumentarEliminar();
-        /*
-         * for (int i = 0; i < this.elements.length; i++) {
-         * if (this.elements[i] != null && this.elements[i] instanceof ElementMovable) {
-         * ((ElementMovable) this.elements[i]).move();
-         * }
-         * // else if(this.elements[i]!=null && this.elements[i] instanceof
-         * // ElementResizable && contador > 0){
-         * // ((Hook)this.elements[i]).update();
-         * // }
-         * }
-         */
-        /*
-         * jugador.move();
-         * IMovable.BorderCollision b = this.jugador.IsInBorder(game_zone);
-         * switch (b) {
-         * case DOWN:
-         * this.jugador.setVy(Math.abs(this.jugador.getVy()));
-         * break;
-         * default:
-         * throw new AssertionError();
-         * }
-         */
-    }
-
-    private void evalCollisions() {
-        for (int i = 0; i < this.balls.getSize(); i++) {
-            if (this.balls.getBall(i) != null) {
-                // this.balls.getBall(i).move();
-                // double vy=this.balls.getBall(i).getVy();
-                // vy*=-0.975;
-                if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
-                    // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-                    this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
-                    this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
-                            this.game_zone.getMaxY() - this.balls.getBall(i).getHeight());
-                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
-                    this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
-                    this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
-                            this.game_zone.getMinY());
-                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.RIGHT) {
-                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-                    this.balls.getBall(i).setPosition(this.game_zone.getMaxX() - this.balls.getBall(i).getWidth(),
-                            this.balls.getBall(i).getRectangle().getMinY());
-                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.LEFT) {
-                    this.balls.getBall(i).setPosition(this.game_zone.getMinX(),
-                            this.balls.getBall(i).getRectangle().getMinY());
-                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-                } else {
-                    for (int j = 0; j < elements.length; j++) {
-                        if (elements[j] instanceof Brick) {
-                            Optional<Collision>  c = this.balls.getBall(i).collisionWithBrick(elements[j]);
-                            if(c.isPresent()){
-                                this.balls.getBall(i).move(c.get().getSeparator().getX(), c.get().getSeparator().getY());
-                                if(c.get().getSeparator().getY()!=0){
-                                    this.balls.getBall(i).setVy(- this.balls.getBall(i).getVy());
-                                }
-                                if(c.get().getSeparator().getX()!=0){
-                                    this.balls.getBall(i).setVx(- this.balls.getBall(i).getVx());
-                                }
-                            }
-                        }
-                    }
+        if (this.jugador.getLifes() > 0){
+            for (int i = 0; i < this.balls.getSize(); i++) {
+                if (this.balls.getBall(i) != null) {
+                    this.balls.getBall(i).move();
                 }
             }
-        }
-        
-        if (this.hook != null){
-            for (int j = 0; j < this.balls.getSize(); j++) {
-                for (int h = 0; h < elements.length; h++) {
-                    if (balls.getBall(j) != null) {
-                        if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
-                            this.hook = null;
-                            this.balls.dividir(this.balls.getBall(j));
-                        }
-                    }
-
-                    if (hook == null){ 
-                        j = balls.getSize();
-                    }
-                }
+            this.evalCollisions();
+            if(this.hook!=null){
+                this.hook.resizeHeigth();
             }
-        }
-
-        if (this.hook != null){
-            for (int i = 0; i < elements.length; i++){
-                if (this.elements[i] != null){
-                    if (this.hook.getRectangle().intersects(elements[i].getRectangle())) {
-                            if (this.elements[i] instanceof BrickBreakable) {
-                                this.hook = null;
-                                this.elements[i] = null;
-                            } else if (this.elements[i] instanceof Brick) {
-                                this.hook = null;
-                        }
-                    }
-                }
-
-                if (hook == null){ 
-                    i = balls.getSize();
-                }
-            }
-
-            if(hook != null && this.hook.ajustTop(game_zone)){
-                this.hook = null;
+            if(balls.getNumberOfElements() <= 0){
+                this.nextLevel();
+                this.createBall();
             }
         }
     }
 
     private void render() {
         this.clear();
+        //Pintamos todo lo que hay en elements.
         if (this.elements != null) {
             for (int i = 0; i < this.elements.length; i++) {
                 if (this.elements[i] != null) {
                     this.elements[i].paint(gc);
                 }
             }
-            this.jugador.paint(gc);
-            if (this.jugado != null) {
-                this.jugado.paint(gc);
-                // if (this.hook != null){
-                // this.hook.paint(gc);
-                // }
-                if (this.jugado.isDebug())
+             //Pintamos al jugador.
+            if (this.jugador != null) {
+                this.jugador.paint(gc);
+                if (this.jugador.isDebug())
                 {
-                    this.jugado.debug(gc);
+                    this.jugador.debug(gc);
                 }
             }
+            //Pintamos el arpón.
             if (this.hook != null) {
                 this.hook.paint(gc);
-            }
-            if (this.fixedhook != null) {
-                this.fixedhook.paint(gc);
             }
             for (int i = 0; i < this.balls.getSize(); i++) {
                 if (this.balls.getBall(i) != null) {
@@ -355,11 +239,9 @@ public class Board implements IKeyListener {
 
     private void process_input() {
         this.movimientos();
-        // this.evalCollisions();
-        // this.AumentarEliminar();
     }
 
-    /**
+        /**
      * limpiar la pantalla
      */
     private void clear() {
@@ -368,7 +250,7 @@ public class Board implements IKeyListener {
                 this.original_size.getHeight() * Game.SCALE);
     }
 
-    /**
+        /**
      * pintar el fonodo
      */
     public void paintBackground() {
@@ -389,6 +271,86 @@ public class Board implements IKeyListener {
                     0, 0, this.original_size.getWidth() * Game.SCALE, this.original_size.getHeight() * Game.SCALE);
         }
     }
+
+    private void evalCollisions() {
+        //Evaluar colisiones de la pelota con los bordes del tablero.
+        for (int i = 0; i < this.balls.getSize(); i++) {
+            if (this.balls.getBall(i) != null) {
+                if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
+                    this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
+                    this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
+                            this.game_zone.getMaxY() - this.balls.getBall(i).getHeight());
+                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
+                    this.balls.getBall(i).setVy(-this.balls.getBall(i).getVy());
+                    this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
+                            this.game_zone.getMinY());
+                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.RIGHT) {
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+                    this.balls.getBall(i).setPosition(this.game_zone.getMaxX() - this.balls.getBall(i).getWidth(),
+                            this.balls.getBall(i).getRectangle().getMinY());
+                } else if (this.balls.getBall(i).IsInBorder(game_zone) == IMovable.BorderCollision.LEFT) {
+                    this.balls.getBall(i).setPosition(this.game_zone.getMinX(),
+                            this.balls.getBall(i).getRectangle().getMinY());
+                    this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
+                } else {
+
+                    for (int j = 0; j < elements.length; j++) {
+                        if (elements[j] instanceof Brick) {
+                            Optional<Collision>  c = this.balls.getBall(i).collision(elements[j]);
+                            if(c.isPresent()){
+                                this.balls.getBall(i).move(c.get().getSeparator().getX(), c.get().getSeparator().getY());
+                                if(c.get().getSeparator().getY()!=0){
+                                    this.balls.getBall(i).setVy(- this.balls.getBall(i).getVy());
+                                }
+                                if(c.get().getSeparator().getX()!=0){
+                                    this.balls.getBall(i).setVx(- this.balls.getBall(i).getVx());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Choque del arma con las bolas.
+        if (this.hook != null){
+            for (int j = 0; j < this.balls.getSize(); j++) {
+                if (balls.getBall(j) != null) {
+                    if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
+                        this.hook = null;
+                        this.balls.dividir(this.balls.getBall(j));
+                    }
+                }
+
+                if (hook == null){ 
+                    j = balls.getSize();
+                }
+            }
+        }
+        //Choque del arma con muros y muros destruible.
+        if (this.hook != null){
+            for (int i = 0; i < elements.length; i++){
+                if (this.elements[i] != null){
+                    if (this.hook.getRectangle().intersects(elements[i].getRectangle())) {
+                            if (this.elements[i] instanceof BrickBreakable) {
+                                this.hook = null;
+                                this.elements[i] = null;
+                            } else if (this.elements[i] instanceof Brick) {
+                                this.hook = null;
+                        }
+                    }
+                }
+
+                if (hook == null){ 
+                    i = balls.getSize();
+                }
+            }
+            //Choque del arma con la parte superior.
+            if(hook != null && this.hook.ajustTop(game_zone)){
+                this.hook = null;
+            }
+        }
+    }
+
 
     /**
      * gestión de pulsación
@@ -440,14 +402,10 @@ public class Board implements IKeyListener {
                 this.setDebug();
                 break;
 
-            case F:
-            if(this.fixedhook==null){
-                fixedhook = new FixedHook(this.jugado.getCenterX(), this.jugado.getCenter().getY());
-            }
-                break;
             case SPACE:
+            //Gancho normal.
             if(this.hook==null){
-                hook = new Hook(this.jugado.getCenterX(), this.jugado.getCenter().getY());
+                hook = new Hook(this.jugador.getCenterX(), this.jugador.getCenter().getY());
             }
                 break;
         }
@@ -459,11 +417,8 @@ public class Board implements IKeyListener {
         if (this.actual_level >= this.levels.length) {
             this.actual_level = 0;
         }
-        // if (this.nextLevel()!=null){
-        // this.backgroundsound.stop();
-        // }
-        // this.backgroundsound=Resources.getInstance().getSound("fondo");
-        // this.backgroundsound.play();
+        this.backgroundsound=Resources.getInstance().getSound("fondo");
+        this.backgroundsound.play();
         this.levels[this.actual_level].analyze();
         this.createElementsLevel();
 
@@ -475,7 +430,6 @@ public class Board implements IKeyListener {
     public void setDebug() {
         this.debug = !this.debug;
         this.jugador.setDebug(debug);
-        this.jugado.setDebug(debug);
         this.ball.setDebug(debug);
         for (int i = 0; i < balls.getSize(); i++)
         {
@@ -492,41 +446,17 @@ public class Board implements IKeyListener {
         } else if (this.right_press) {
             this.jugador.moveRight(2);
             if (this.jugador.IsInBorder(game_zone) == IMovable.BorderCollision.RIGHT) {
-                this.jugador.setPosition(this.game_zone.getMaxX() - this.jugador.getWidth(),
-                        this.jugador.getRectangle().getMinY());
-            }
-        } else if (this.up_press) {
-            this.jugador.moveUp(2);
-            if (this.jugador.IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
-                this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMinY());
-            }
-        } else if (this.down_press) {
-            this.jugador.moveDown(2);
-            if (this.jugador.IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
-                this.jugador.setPosition(this.jugador.getRectangle().getMinX(),
-                        this.game_zone.getMaxY() - this.jugador.getHeight());
+                this.jugador.setPosition(this.game_zone.getMaxX() - Bros.WIDTH, this.jugador.getRectangle().getMinY());
             }
         }
-
-        if (this.left_press) {
-            this.jugado.moveLeft(2);
-            if (this.jugado.IsInBorder(game_zone) == IMovable.BorderCollision.LEFT) {
-                this.jugado.setPosition(this.game_zone.getMinX(), this.jugado.getRectangle().getMinY());
-            }
-        } else if (this.right_press) {
-            this.jugado.moveRight(2);
-            if (this.jugado.IsInBorder(game_zone) == IMovable.BorderCollision.RIGHT) {
-                this.jugado.setPosition(this.game_zone.getMaxX() - Bros.WIDTH, this.jugado.getRectangle().getMinY());
-            }
-        }
-        if (this.jugado.IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
-            this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMinY());
+        if (this.jugador.IsInBorder(game_zone) == IMovable.BorderCollision.TOP) {
+            this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMinY());
         }
         if (this.up_press) {
             for (int i = 0; i < elements.length; i++) {
                 if (elements[i] instanceof Ladder) {
-                    if (this.jugado.getRectangle().intersects(elements[i].getRectangle())) {
-                        this.jugado.moveUp(7);
+                    if (this.jugador.getRectangle().intersects(elements[i].getRectangle())) {
+                        this.jugador.moveUp(7);
 
                     }
                 }
@@ -534,328 +464,56 @@ public class Board implements IKeyListener {
         }
         for (int i = 0; i < elements.length; i++) {
                 if (elements[i] instanceof Brick 
-                        && this.jugado.getRectangle().intersects(elements[i].getRectangle())         
-                        && this.jugado.isActiveVerticalGravity()) {
-                    this.jugado.moveUp(5);
-                    this.jugado.unactiveVerticalGravity();
+                        && this.jugador.getRectangle().intersects(elements[i].getRectangle())         
+                        && this.jugador.isActiveVerticalGravity()) {
+                    this.jugador.moveUp(5);
+                    this.jugador.unactiveVerticalGravity();
             }      
         }
-
-        // for(int i=0;i<elements.length;i++){
-        // if(elements[i] instanceof Brick){
-        // if(this.jugado.getRectangle().intersects(elements[i].getRectangle()) &&
-        // this.jugado.isActiveVerticalGravity()){
-        // this.jugado.moveUp(5);
-        // this.jugado.unactiveVerticalGravity();
-        // }
-        // }if (this.up_press) {
-        // for(int j=0;j<elements.length;j++){
-        // if(elements[j] instanceof Ladder){
-        // if(this.jugado.getRectangle().intersects(elements[j].getRectangle())){
-        // this.jugado.moveUp(7);
-
-        // }
-        // }
-        // }
-        // }if((this.jugado.getRectangle().getMaxY())<(this.game_zone.getMaxY())){
-        // this.jugado.moveDown(5);
-        // this.jugado.activeVerticalGravity();
-        // }
-        // }
-
         if (this.down_press) {
             for (int i = 0; i < elements.length; i++) {
                 if (elements[i] instanceof Ladder) {
-                    if (this.jugado.getRectangle().intersects(elements[i].getRectangle())) {
+                    if (this.jugador.getRectangle().intersects(elements[i].getRectangle())) {
 
 
                     }
                 }
             }
         }
-        if (this.jugado.IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
-            //this.jugado.setPosition(this.jugado.getRectangle().getMinX(), this.game_zone.getMaxY() - Bros.HEIGHT);
-            this.jugado.setVerticalGravity(0);
-            //this.jugado.moveDown(this.jugado.getVerticalGravity());
+        if (this.jugador.IsInBorder(game_zone) == IMovable.BorderCollision.DOWN) {
+            this.jugador.setPosition(this.jugador.getRectangle().getMinX(), this.game_zone.getMaxY() - Bros.HEIGHT);
+            this.jugador.setVerticalGravity(0);
         }
+        if ((this.jugador.getRectangle().getMaxY()) < (this.game_zone.getMaxY())) {
 
-        // if((this.jugado.getCenterY())<(this.game_zone.getMaxY()-16)){
-        // this.jugado.moveDown(5);
-        // // this.jugado.move();
-        // }
-        if ((this.jugado.getRectangle().getMaxY()) < (this.game_zone.getMaxY())) {
-            // this.jugado.move();
-
-            this.jugado.activeVerticalGravity();
-            this.jugado.setVerticalGravity(5);
-            this.jugado.moveDown(this.jugado.getVerticalGravity());
+            this.jugador.activeVerticalGravity();
+            this.jugador.setVerticalGravity(5);
+            this.jugador.moveDown(this.jugador.getVerticalGravity());
         }
-        // if((this.jugado.getCenterY()+(Bros.HEIGHT/2))<(this.game_zone.getMaxY())){
-        //// this.jugado.moveDown(2);
-        // this.jugado.move();
-        // }
-        // if((this.jugado.getCenterY()+(Bros.getHEIGHT()/2))<(this.game_zone.getMaxY())){
-        //// this.jugado.moveDown(2);
-        // this.jugado.move();
-        // }
-        // if(!(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN)){
-        // this.jugado.move();
-        // }
-        // if(!(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN) &&
-        // !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.TOP) &&
-        // !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT) &&
-        // !(this.jugado.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT)){
-        //// this.jugado.moveDown(2);
-        // this.jugado.move();
-        //
-        // }
-
-        // ball.move();
-        //// // double vx=this.ball.getVx();
-        // double vy=this.ball.getVy();
-        // vy*=-0.975;
-        //// // for (int i = 0; i < 4; i++)
-        // if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-        //// double delta = this.ball.getRectangle().getMaxY() -
-        // this.game_zone.getMaxY();
-        //// double vy=this.ball.getVy();
-        // //System.out.println(vy + " -> " + delta);
-        //// vy*=-0.975;
-        // //vy+=delta;
-        // this.ball.setVy(vy);
-        //// this.ball.setVy(-4.5);
-        //// this.ball.reset();
-        //// this.ball.setVy(-this.ball.getVy());
-        // this.ball.setVx(this.ball.getVx());
-        //
-        // // if(this.vx<-3.667590){
-        // // this.vx=1;
-        // // this.ball.setVx(this.vx);
-        // // }else{
-        // // this.vx=-1;
-        // // this.ball.setVx(this.vx);
-        // // }
-        // this.ball.setPosition(this.ball.getRectangle().getMinX(),
-        // this.game_zone.getMaxY()-this.ball.getHeight());
-        //
-        // }
-        // if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-        //// double delta = this.game_zone.getMinY() -
-        // this.ball.getRectangle().getMinY();
-        //// double vy=this.ball.getVy();
-        //// vy*=-0.975;
-        ////// vy+=delta;
-        //// this.ball.setVy(vy);
-        // this.ball.setVy(vy);
-        //
-        // this.ball.setPosition(this.ball.getRectangle().getMinX(),
-        // this.game_zone.getMinY());
-        // }
-        // if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-        //// double vx = this.ball.getVx();
-        //// vx*=-0.975;
-        //// this.ball.setVx(v);
-        //// this.ball.setVx(this.ball.getVx());
-        //// this.ball.setVx(-1);
-        // this.ball.setVx(-this.ball.getVx());
-        //// this.vx=-1;
-        // // this.ball.setVx(this.vx);
-        // // this.ball.setVx(this.vx);
-        // this.ball.setPosition(this.game_zone.getMaxX()-this.ball.getWidth(),this.ball.getRectangle().getMinY());
-        // }
-        ////
-        //// if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-        //// this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
-        //// this.ball.moveRight(-this.ball.getVx());
-        //// }
-        // if(this.ball.IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-        // this.ball.setPosition(this.game_zone.getMinX(),this.ball.getRectangle().getMinY());
-        //// double vx = this.ball.getVx();
-        //// vx*=+0.975;
-        //// this.ball.setVx(-v);
-        //// this.ball.setVx(-this.ball.getVx());
-        //// this.ball.setVx(1);
-        // this.ball.setVx(-this.ball.getVx());
-        //// this.vx=1;
-        // // this.ball.setVx(this.vx);
-        //// this.ball.moveRight(this.vx);
-        //
-        //
-        // // this.ball.setVx(this.vx);
-        //
-        // }
-
         int i = 0;
         for (; i < this.balls.getSize(); i++) {
-
-            // this.balls.getBall(i).move();
-            // double vy=this.balls.getBall(i).getVy();
-            // vy*=-0.975;
-            // if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.DOWN){
-            // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
-            // this.balls.getBall(i).setVy(vy);
-            // this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
-            // this.game_zone.getMaxY()-this.balls.getBall(i).getHeight());
-
-            // }
-            // if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.TOP){
-            // this.balls.getBall(i).setVy(vy);
-
-            // this.balls.getBall(i).setPosition(this.balls.getBall(i).getRectangle().getMinX(),
-            // this.game_zone.getMinY());
-            // }
-            // if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.RIGHT){
-            // this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-            // this.balls.getBall(i).setPosition(this.game_zone.getMaxX()-this.balls.getBall(i).getWidth(),this.balls.getBall(i).getRectangle().getMinY());
-            // }
-            // if(this.balls.getBall(i).IsInBorder(game_zone)==IMovable.BorderCollision.LEFT){
-            // this.balls.getBall(i).setPosition(this.game_zone.getMinX(),this.balls.getBall(i).getRectangle().getMinY());
-            // this.balls.getBall(i).setVx(-this.balls.getBall(i).getVx());
-            // }
-
-
-            //Restar vidas del jugador.
-            if(this.balls.getBall(i) != null && this.jugado.getRectangle().intersects(this.balls.getBall(i).getRectangle())){
-            this.jugado.restarVida();
-            // this.balls.getBall(i).setPosition(0, 0);
-            // this.balls.getBall(i).setVy(vy);
-            // this.balls.getBall(i).setVx(this.balls.getBall(i).getVx());
+            if(this.balls.getBall(i) != null && this.jugador.getRectangle().intersects(this.balls.getBall(i).getRectangle())){
+                this.jugador.restarVida();
+                Optional<Collision>  c = this.balls.getBall(i).collision(this.jugador);
+                if(c.isPresent()){
+                    this.balls.getBall(i).move(c.get().getSeparator().getX(), c.get().getSeparator().getY());
+                    if(c.get().getSeparator().getY()!=0){
+                        this.balls.getBall(i).setVy(- this.balls.getBall(i).getVy());
+                    }
+                    if(c.get().getSeparator().getX()!=0){
+                        this.balls.getBall(i).setVx(- this.balls.getBall(i).getVx());
+                    }
+                }
             }
-
-            // //Eliminar al jugador.
-            // // if(this.jugado.getLifes()<0){
-            // // this.jugado = null;
-            // // }
-
-            // for(int j=0; j<this.hooks.length; j++){
-            // if(this.balls.getBall(i) != null){
-            // if(this.hooks[j] != null){
-            // if(this.hooks[j].getRectangle().getMaxX() >=
-            // this.balls.getBall(i).getRectangle().getMinX()
-            // && this.hooks[j].getRectangle().getMinX() <=
-            // this.balls.getBall(i).getRectangle().getMaxX()
-            // && this.hooks[j].getRectangle().getMaxY() >=
-            // this.balls.getBall(i).getRectangle().getMinY()
-            // && this.hooks[j].getRectangle().getMinY() <=
-            // this.balls.getBall(i).getRectangle().getMaxY()){
-            // this.balls.dividir(this.balls.getBall(i));
-            // this.hooks[j].resetHeigth();
-            // this.hooks[j] = null;
-            // }
-            // }
-            // }
-            // }
         }
     }
 
-    // public void AumentarEliminar() {
-    //     if (this.hooks[0] != null) {
-    //         double originalx = this.hooks[0].getRectangle().getMinX();
-
-    //         for (int i = 0; i < this.hooks.length; i++) {
-    //             if (this.hooks[i].getRectangle().getMaxY() <= this.game_zone.getMaxY()) {
-    //                 this.hooks[0].resizeHeigth();
-    //                 if (this.hooks[i] != null) {
-    //                     this.hooks[i] = null;
-    //                 }
-    //                 if (this.hooks[i] == null) {
-    //                     this.hooks[i] = new Hook(originalx, this.game_zone.getMinY());
-    //                 }
-    //             } else {
-    //                 this.hooks[i].resetHeigth();
-    //                 this.hooks[i] = null;
-    //             }
-    //             for (int j = 0; j < this.balls.getSize(); j++) {
-    //                 for (int h = 0; h < elements.length; h++) {
-    //                     if (balls.getBall(j) != null && this.hooks[i] != null) {
-    //                         if (this.hooks[i].getRectangle().intersects(balls.getBall(j).getRectangle())) {
-    //                             this.hooks[i].resetHeigth();
-    //                             this.hooks[i] = null;
-    //                             this.balls.dividir(this.balls.getBall(j));
-    //                         } else if (this.elements[h] != null) {
-    //                             if (this.hooks[i].getRectangle().intersects(elements[h].getRectangle())) {
-    //                                 if (this.elements[h] instanceof BrickBreakable) {
-    //                                     this.hooks[i].resetHeigth();
-    //                                     this.hooks[i] = null;
-    //                                     this.elements[h] = null;
-    //                                 } else if (this.elements[h] instanceof Brick) {
-    //                                     this.hooks[i].resetHeigth();
-    //                                     this.hooks[i] = null;
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public void CollisionHook(){
-    //     for (int j = 0; j < this.balls.getSize(); j++) {
-    //         for (int h = 0; h < elements.length; h++) {
-    //             if (balls.getBall(j) != null && this.hook != null) {
-    //                 if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
-    //                     this.hook = null;
-    //                     this.balls.dividir(this.balls.getBall(j));
-    //                 } else if (this.elements[h] != null) {
-    //                     if (this.hook.getRectangle().intersects(elements[h].getRectangle())) {
-    //                         if (this.elements[h] instanceof BrickBreakable) {
-    //                             this.hook = null;
-    //                             this.elements[h] = null;
-    //                         } else if (this.elements[h] instanceof Brick) {
-    //                             this.hook = null;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if(this.hook != null){
-    //         if(this.hook.ajustTop(game_zone)){
-    //             this.hook = null;
-    //         }
-    //     }
-    // }
-
-    /*public void AumentarEliminar() {
-        if (this.hook != null) {
-            double originalx = this.hook.getRectangle().getMinX();
-                if (this.hook.getRectangle().getMaxY() <= this.game_zone.getMaxY()) {
-                    this.hook.resizeHeigth();
-                    if (this.hook != null) {
-                        this.hook = null;
-                    }
-                    if (this.hook == null) {
-                        this.hook = new Hook(originalx, this.game_zone.getMinY());
-                    }
-                } else {
-                   // this.hook.resizeHeigth();
-                    this.hook = null;
-                }
-                for (int j = 0; j < this.balls.getSize(); j++) {
-                    for (int h = 0; h < elements.length; h++) {
-                        if (balls.getBall(j) != null && this.hook != null) {
-                            if (this.hook.getRectangle().intersects(balls.getBall(j).getRectangle())) {
-                                this.hook.resetHeigth();
-                                this.hook = null;
-                                this.balls.dividir(this.balls.getBall(j));
-                            } else if (this.elements[h] != null) {
-                                if (this.hook.getRectangle().intersects(elements[h].getRectangle())) {
-                                    if (this.elements[h] instanceof BrickBreakable) {
-                                        this.hook.resetHeigth();
-                                        this.hook = null;
-                                        this.elements[h] = null;
-                                    } else if (this.elements[h] instanceof Brick) {
-                                        this.hook.resetHeigth();
-                                        this.hook = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            
-        }
-    }*/
+    public void createBall(){
+        this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 300, 50, BallType.EXTRABIG, BallColor.BLUE);
+        this.ball.setVx(1);
+        this.balls.addBall(ball);
+        this.ball = new Ball(0.0, 0.1, 0.4, 0.4, 40, 50, BallType.EXTRABIG, BallColor.RED);
+        this.ball.setVx(-1);
+        this.balls.addBall(ball);
+    }
 }
